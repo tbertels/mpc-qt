@@ -567,61 +567,6 @@
       ]
     },
     {
-    "name": "x264",
-    "cleanup": [
-      "/include",
-      "/lib/pkgconfig",
-      "/share/man"
-    ],
-    "config-opts": [
-      "--disable-cli",
-      "--enable-shared"
-    ],
-    "sources": [
-      {
-        "type": "git",
-        "url": "https://github.com/jpsdr/x264",
-        "mirror-urls": [
-          "https://code.videolan.org/videolan/x264.git"
-        ],
-        "commit": "7ed753b10a61d0be95f683289dfb925b800b0676",
-        "x-checker-data": {
-          "type": "json",
-          "url": "https://code.videolan.org/api/v4/projects/536/repository/commits",
-          "commit-query": "first( .[].id )",
-          "version-query": "first( .[].id )",
-          "timestamp-query": "first( .[].committed_date )"
-        }
-      }
-    ]
-  },
-      {
-      "name": "x265",
-      "buildsystem": "cmake",
-      "subdir": "source",
-      "config-opts": [
-        "-DCMAKE_BUILD_TYPE=Release",
-        "-DBUILD_STATIC=0"
-      ],
-      "cleanup": [
-        "/include",
-        "/lib/pkgconfig",
-        "/share/man"
-      ],
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://bitbucket.org/multicoreware/x265_git.git",
-          "tag": "4.0",
-          "commit": "6318f223684118a2c71f67f3f4633a9e35046b00",
-          "x-checker-data": {
-            "type": "git",
-            "tag-pattern": "^([\\d.]+)$"
-          }
-        }
-      ]
-    },
-    {
       "name": "ffmpeg",
       "cleanup": [
         "/share/ffmpeg/examples"
@@ -647,7 +592,6 @@
         "--enable-librsvg",
         "--enable-libvpx",
         "--enable-libmp3lame",
-        "--enable-libx264",
         "--enable-libwebp",
         "--enable-libjxl",
         "--enable-libxml2"
