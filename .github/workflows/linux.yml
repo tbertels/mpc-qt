@@ -42,10 +42,11 @@ jobs:
 
       - name: Get version
         run: |
-          if [[ "$GITHUB_REF" == *"tags/v"* ]]; then
-            echo "MPC-QT_PACKAGE_VERSION=$(echo $GITHUB_REF | sed 's,refs/tags/v,,g')">> $GITHUB_ENV
+          if [[ "$GITHUB_REF" == *"refs/heads/release/"* ]]; then
+            echo "MPC-QT_PACKAGE_VERSION=$(echo $GITHUB_REF | sed 's,refs/heads/release/,,g')">> $GITHUB_ENV
           else
             echo "MPC-QT_PACKAGE_VERSION=continuous">> $GITHUB_ENV
+          fi
       - uses: flatpak/flatpak-github-actions/flatpak-builder@master
         name: "Build"
         with:
