@@ -678,7 +678,6 @@
         "-Ddrm=enabled",
         "-Degl=enabled",
         "-Dx11=enabled",
-        "-Dwayland=enabled",
         "-Degl-drm=enabled",
         "-Dgpl=true",
         "-Dlibbluray=enabled",
