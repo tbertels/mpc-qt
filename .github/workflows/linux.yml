@@ -26,3 +26,31 @@ jobs:
     name: Linux
     needs: build
     uses: ./.github/workflows/linux_tests.yml
+
+  flatpak:
+    runs-on: ubuntu-latest
+    container:
+      image: bilelmoussaoui/flatpak-github-actions:kde-6.7
+      options: --privileged
+    steps:
+      - name: Check out repository
+        uses: sithlord48/fancy-checkout@v1.0.0
+
+      - run: git config --global protocol.file.allow always
+
+      - name: Get version
+        run: echo "MPC-QT_PACKAGE_VERSION=$(echo $GITHUB_REF | sed 's,refs/tags/v,,g')">> $GITHUB_ENV
+
+      - uses: flatpak/flatpak-github-actions/flatpak-builder@master
+        name: "Build"
+        with:
+          bundle: mpc-qt-${{env.MPC-QT_PACKAGE_VERSION}}-linux-x86_64.flatpak
+          manifest-path: deploy/dist/flatpak/io.github.mpc_qt.Mpc-Qt.json
+          cache-key: flatpak-builder-${{ github.sha }}
+          upload-artifact: false
+
+      # - name: Upload
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: package-${{ env.PACKAGE_PREFIX }}-flatpak-x86_64
+      #     path: ${{github.workspace}}/mpc-qt[-_]*.flatpak
