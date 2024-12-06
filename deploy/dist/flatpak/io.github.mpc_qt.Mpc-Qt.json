@@ -1,0 +1,846 @@
+{
+  "app-id": "io.github.mpc_qt.Mpc-Qt",
+  "app-version": "24.12",
+  "runtime": "org.kde.Platform",
+  "runtime-version": "6.8",
+  "sdk": "org.kde.Sdk",
+  "metadata": {
+    "appdata": "io.github.mpc_qt.Mpc-Qt.appdata.xml"
+  },
+  "command": "mpc-qt",
+  "rename-icon": "mpc-qt",
+  "rename-desktop-file": "mpc-qt.desktop",
+  "copy-icon": true,
+  "finish-args": [
+    "--share=ipc",
+    "--share=network",
+    "--socket=x11",
+    "--socket=wayland",
+    "--socket=pulseaudio",
+    "--device=dri",
+    "--filesystem=host:ro",
+    "--filesystem=home",
+    "--filesystem=xdg-run/pipewire-0:ro",
+    "--talk-name=org.freedesktop.ScreenSaver",
+    "--own-name=org.mpris.MediaPlayer2.io.github.mpc_qt.Mpc-Qt",
+    "--env=LC_NUMERIC=C",
+    "--env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons"
+  ],
+  "environment": {
+    "QT_QPA_PLATFORM": "wayland"
+  },
+  "cleanup": [
+    "*.a",
+    "*.la",
+    "/include",
+    "/lib/cmake",
+    "/lib/pkgconfig",
+    "/share/man"
+  ],
+  "modules": [
+    {
+      "name": "shaderc",
+      "buildsystem": "cmake-ninja",
+      "builddir": true,
+      "config-opts": [
+        "-DSHADERC_SKIP_COPYRIGHT_CHECK=ON",
+        "-DSHADERC_SKIP_EXAMPLES=ON",
+        "-DSHADERC_SKIP_TESTS=ON",
+        "-DSPIRV_SKIP_EXECUTABLES=ON",
+        "-DENABLE_GLSLANG_BINARIES=OFF"
+      ],
+      "cleanup": [
+        "/bin",
+        "/include",
+        "/lib/cmake",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/google/shaderc.git",
+          "commit": "40bced4e1e205ecf44630d2dfa357655b6dabd04"
+        },
+        {
+          "type": "git",
+          "url": "https://github.com/KhronosGroup/SPIRV-Tools.git",
+          "tag": "v2024.1",
+          "commit": "04896c462d9f3f504c99a4698605b6524af813c1",
+          "dest": "third_party/spirv-tools"
+        },
+        {
+          "type": "git",
+          "url": "https://github.com/KhronosGroup/SPIRV-Headers.git",
+          "commit": "4f7b471f1a66b6d06462cd4ba57628cc0cd087d7",
+          "dest": "third_party/spirv-headers"
+        },
+        {
+          "type": "git",
+          "url": "https://github.com/KhronosGroup/glslang.git",
+          "tag": "14.1.0",
+          "commit": "ee2f5d09eaf8f4e8d0d598bd2172fce290d4ca60",
+          "dest": "third_party/glslang",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^(\\d{1,2}\\.\\d{1,2}\\.\\d{1,4})$"
+          }
+        }
+      ]
+    },
+    {
+    "name": "glslang",
+    "buildsystem": "cmake-ninja",
+    "config-opts": ["-DBUILD_SHARED_LIBS=ON"],
+    "cleanup": ["/bin", "/include", "/lib/cmake"],
+    "sources": [
+      {
+        "type": "archive",
+        "url": "https://github.com/KhronosGroup/glslang/archive/14.1.0.tar.gz",
+        "sha256": "b5e4c36d60eda7613f36cfee3489c6f507156829c707e1ecd7f48ca45b435322",
+        "x-checker-data": {
+          "type": "anitya",
+          "project-id": 205796,
+          "stable-only": true,
+          "url-template": "https://github.com/KhronosGroup/glslang/archive/$version.tar.gz"
+        }
+      },
+      {
+        "type": "archive",
+        "url": "https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/sdk-1.3.261.1.tar.gz",
+        "sha256": "ead95c626ad482882a141d1aa0ce47b9453871f72c42c0b28d39c82f60a52008",
+        "dest": "External/spirv-tools",
+        "x-checker-data": {
+          "type": "anitya",
+          "stable-only": true,
+          "project-id": 334920,
+          "url-template": "https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/sdk-$version.tar.gz"
+        }
+      },
+      {
+        "type": "archive",
+        "url": "https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/sdk-1.3.261.1.tar.gz",
+        "sha256": "32b4c6ae6a2fa9b56c2c17233c8056da47e331f76e117729925825ea3e77a739",
+        "dest": "External/spirv-tools/external/spirv-headers",
+        "x-checker-data": {
+          "type": "anitya",
+          "stable-only": true,
+          "project-id": 334920,
+          "url-template": "https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/sdk-$version.tar.gz"
+        }
+      }
+    ]
+  },
+  {
+    "name": "libXpresent",
+    "buildsystem": "autotools",
+    "sources": [
+      {
+        "type": "archive",
+        "url": "https://xorg.freedesktop.org/archive/individual/lib/libXpresent-1.0.1.tar.xz",
+        "sha256": "b964df9e5a066daa5e08d2dc82692c57ca27d00b8cc257e8e960c9f1cf26231b",
+        "x-checker-data": {
+          "type": "anitya",
+          "project-id": 17166,
+          "stable-only": true,
+          "url-template": "https://xorg.freedesktop.org/archive/individual/lib/libXpresent-$version.tar.xz"
+        }
+      }
+    ]
+  },
+    {
+      "name": "uchardet",
+      "buildsystem": "cmake-ninja",
+      "config-opts": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_STATIC=0"
+      ],
+      "cleanup": [
+        "/bin"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://www.freedesktop.org/software/uchardet/releases/uchardet-0.0.8.tar.xz",
+          "sha256": "e97a60cfc00a1c147a674b097bb1422abd9fa78a2d9ce3f3fdcc2e78a34ac5f0",
+          "x-checker-data": {
+            "type": "anitya",
+            "project-id": 9265,
+            "stable-only": true,
+            "url-template": "https://www.freedesktop.org/software/uchardet/releases/uchardet-$version.tar.xz"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libv4l2",
+      "buildsystem": "meson",
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/share/man"
+      ],
+      "config-opts": [
+        "-Ddoxygen-html=false",
+        "-Ddoxygen-doc=disabled",
+        "-Dbpf=disabled",
+        "-Dudevdir=/app/lib/udev"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://git.linuxtv.org/v4l-utils.git",
+          "mirror-urls": [
+            "https://github.com/gjasny/v4l-utils.git"
+          ],
+          "tag": "v4l-utils-1.26.1",
+          "commit": "4aee01a027923cab1e40969f56f8ba58d3e6c0d1",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^v4l-utils-([\\d.]+)$"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libcdio",
+      "config-opts": [
+        "--disable-static",
+        "--disable-example-progs"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://ftp.gnu.org/gnu/libcdio/libcdio-2.1.0.tar.bz2",
+          "mirror-urls": [
+            "https://mirrors.kernel.org/gnu/libcdio/libcdio-2.1.0.tar.bz2",
+            "https://mirrors.ocf.berkeley.edu/gnu/libcdio/libcdio-2.1.0.tar.bz2",
+            "https://ftpmirror.gnu.org/gnu/libcdio/libcdio-2.1.0.tar.bz2"
+          ],
+          "sha256": "8550e9589dbd594bfac93b81ecf129b1dc9d0d51e90f9696f1b2f9b2af32712b",
+          "x-checker-data": {
+            "type": "html",
+            "url": "https://ftp.gnu.org/gnu/libcdio/",
+            "version-pattern": "libcdio-(\\d\\.\\d+\\.?\\d*).tar.bz2",
+            "url-template": "https://ftp.gnu.org/gnu/libcdio/libcdio-$version.tar.bz2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libcdio-paranoia",
+      "config-opts": [
+        "--disable-static",
+        "--disable-example-progs"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://ftp.gnu.org/gnu/libcdio/libcdio-paranoia-10.2+2.0.1.tar.bz2",
+          "mirror-urls": [
+            "https://mirrors.kernel.org/gnu/libcdio/libcdio-paranoia-10.2+2.0.1.tar.bz2",
+            "https://mirrors.ocf.berkeley.edu/gnu/libcdio/libcdio-paranoia-10.2+2.0.1.tar.bz2",
+            "https://ftpmirror.gnu.org/gnu/libcdio/libcdio-paranoia-10.2+2.0.1.tar.bz2"
+          ],
+          "sha256": "33b1cf305ccfbfd03b43936975615000ce538b119989c4bec469577570b60e8a",
+          "x-checker-data": {
+            "type": "html",
+            "url": "https://ftp.gnu.org/gnu/libcdio/",
+            "version-pattern": "libcdio-paranoia-([\\d\\.\\+-]+).tar.bz2",
+            "url-template": "https://ftp.gnu.org/gnu/libcdio/libcdio-paranoia-$version.tar.bz2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libdvdread",
+      "config-opts": [
+        "--disable-static"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.videolan.org/pub/videolan/libdvdread/6.1.3/libdvdread-6.1.3.tar.bz2",
+          "mirror-urls": [
+            "https://videolan.mirror.ba/libdvdread/6.1.3/libdvdread-6.1.3.tar.bz2",
+            "https://videolan.c3sl.ufpr.br/libdvdread/6.1.3/libdvdread-6.1.3.tar.bz2"
+          ],
+          "sha256": "ce35454997a208cbe50e91232f0e73fb1ac3471965813a13b8730a8f18a15369",
+          "x-checker-data": {
+            "type": "html",
+            "url": "https://www.videolan.org/developers/libdvdnav.html",
+            "version-pattern": "The latest version of <code>libdvdread</code> is <b>([\\d\\-\\.]+)<",
+            "url-template": "https://download.videolan.org/pub/videolan/libdvdread/$version/libdvdread-$version.tar.bz2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libdvdnav",
+      "config-opts": [
+        "--disable-static"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.videolan.org/pub/videolan/libdvdnav/6.1.1/libdvdnav-6.1.1.tar.bz2",
+          "mirror-urls": [
+            "https://videolan.mirror.ba/libdvdnav/6.1.1/libdvdnav-6.1.1.tar.bz2",
+            "https://videolan.c3sl.ufpr.br/libdvdnav/6.1.1/libdvdnav-6.1.1.tar.bz2"
+          ],
+          "sha256": "c191a7475947d323ff7680cf92c0fb1be8237701885f37656c64d04e98d18d48",
+          "x-checker-data": {
+            "type": "html",
+            "url": "https://www.videolan.org/developers/libdvdnav.html",
+            "version-pattern": "The latest version of <code>libdvdnav</code> is <b>([\\d\\-\\.]+)</b>\\.",
+            "url-template": "https://download.videolan.org/pub/videolan/libdvdnav/$version/libdvdnav-$version.tar.bz2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libass",
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "config-opts": [
+        "--disable-static"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/libass/libass.git",
+          "tag": "0.17.1",
+          "commit": "e8ad72accd3a84268275a9385beb701c9284e5b3",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^(\\d\\.\\d{1,3}\\.\\d{1,2})$"
+          }
+        }
+      ]
+    },
+    {
+      "name": "luajit",
+      "no-autogen": true,
+      "cleanup": [
+        "/bin",
+        "/include",
+        "/lib/pkgconfig",
+        "/share/man"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/LuaJIT/LuaJIT.git",
+          "mirror-urls": [
+            "https://luajit.org/git/luajit.git"
+          ],
+          "disable-shallow-clone": true,
+          "commit": "5790d253972c9d78a0c2aece527eda5b134bbbf7",
+          "x-checker-data": {
+            "type": "json",
+            "url": "https://api.github.com/repos/LuaJIT/LuaJIT/commits",
+            "commit-query": "first( .[].sha )",
+            "version-query": "first( .[].sha )",
+            "timestamp-query": "first( .[].commit.committer.date )"
+          }
+        },
+        {
+          "type": "shell",
+          "commands": [
+            "sed -i 's|/usr/local|/app|' ./Makefile"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "libplacebo",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dvulkan=enabled",
+        "-Dshaderc=enabled"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/haasn/libplacebo.git",
+          "mirror-urls": [
+            "https://code.videolan.org/videolan/libplacebo.git"
+          ],
+          "tag": "v6.338.2",
+          "commit": "64c1954570f1cd57f8570a57e51fb0249b57bb90",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^v([\\d.]+)$"
+          }
+        }
+      ]
+    },
+    {
+      "name": "nv-codec-headers",
+      "cleanup": [
+        "*"
+      ],
+      "no-autogen": true,
+      "make-install-args": [
+        "PREFIX=/app"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/FFmpeg/nv-codec-headers.git",
+          "mirror-urls": [
+            "https://git.videolan.org/git/ffmpeg/nv-codec-headers.git"
+          ],
+          "tag": "n12.2.72.0",
+          "commit": "c69278340ab1d5559c7d7bf0edf615dc33ddbba7",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^n([\\d.]+)$"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libaacs",
+      "config-opts": [
+        "--disable-static",
+        "--disable-bdjava-jar"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "sha256": "a88aa0ebe4c98a77f7aeffd92ab3ef64ac548c6b822e8248a8b926725bea0a39",
+          "type": "archive",
+          "url": "https://download.videolan.org/pub/videolan/libaacs/0.11.1/libaacs-0.11.1.tar.bz2",
+          "mirror-urls": [
+            "https://videolan.mirror.ba/libaacs/0.11.1/libaacs-0.11.1.tar.bz2",
+            "https://videolan.c3sl.ufpr.br/libaacs/0.11.1/libaacs-0.11.1.tar.bz2"
+          ],
+          "x-checker-data": {
+            "type": "html",
+            "url": "https://www.videolan.org/developers/libaacs.html",
+            "version-pattern": "Latest release is <b>libaacs (\\d\\.\\d+\\.?\\d*)</b>",
+            "url-template": "https://download.videolan.org/pub/videolan/libaacs/$version/libaacs-$version.tar.bz2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "libbluray",
+      "config-opts": [
+        "--disable-static",
+        "--disable-bdjava-jar"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://download.videolan.org/pub/videolan/libbluray/1.3.4/libbluray-1.3.4.tar.bz2",
+          "mirror-urls": [
+            "https://videolan.mirror.ba/libbluray/1.3.4/libbluray-1.3.4.tar.bz2",
+            "https://videolan.c3sl.ufpr.br/libbluray/1.3.4/libbluray-1.3.4.tar.bz2"
+          ],
+          "sha256": "478ffd68a0f5dde8ef6ca989b7f035b5a0a22c599142e5cd3ff7b03bbebe5f2b",
+          "x-checker-data": {
+            "type": "html",
+            "url": "https://www.videolan.org/developers/libbluray.html",
+            "version-pattern": "Latest release is <b>libbluray (\\d\\.\\d+\\.?\\d*)</b>.",
+            "url-template": "https://download.videolan.org/pub/videolan/libbluray/$version/libbluray-$version.tar.bz2"
+        }
+        }
+      ]
+    },
+    {
+      "name": "libXpresent",
+      "buildsystem": "autotools",
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://gitlab.freedesktop.org/xorg/lib/libxpresent.git",
+          "tag": "libXpresent-1.0.1",
+          "commit": "37507b5f44332accfb1064ee69a4f6a833994747",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^libXpresent-([\\d.]+)$"
+          }
+        }
+      ]
+    },
+     {
+      "name": "zimg",
+      "config-opts": [
+        "--disable-static"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/share/doc"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "archive-type": "tar",
+          "url": "https://api.github.com/repos/sekrit-twc/zimg/tarball/release-3.0.5",
+          "sha256": "1b8998f03f4a49e4d730033143722b32bc28a5306ef809ccfb3b4bbb29e4b784",
+          "x-checker-data": {
+            "type": "json",
+            "url": "https://api.github.com/repos/sekrit-twc/zimg/releases/latest",
+            "url-query": ".tarball_url",
+            "version-query": ".tag_name | sub(\"^release-\"; \"\")",
+            "timestamp-query": ".published_at"
+          }
+        }
+      ]
+    },
+    {
+      "name": "rubberband",
+      "buildsystem": "meson",
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/breakfastquay/rubberband.git",
+          "mirror-urls": [
+            "https://hg.sr.ht/~breakfastquay/rubberband"
+          ],
+          "tag": "v3.3.0",
+          "commit": "2be46b0dffb13273a67396c77bc9278736bb03d2",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^v([\\d.]+)$"
+          }
+        }
+      ]
+    },
+    {
+      "name": "mujs",
+      "buildsystem": "autotools",
+      "no-autogen": true,
+      "make-args": [
+        "release"
+      ],
+      "make-install-args": [
+        "prefix=/app",
+        "install-shared"
+      ],
+      "cleanup": [
+        "/bin",
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/ccxvii/mujs.git",
+          "mirror-urls": [
+            "http://git.ghostscript.com/mujs.git"
+          ],
+          "tag": "1.3.4",
+          "commit": "a76d157bdaa9aec8de5ea5a362eed2f59139152d",
+          "x-checker-data": {
+            "type": "git",
+            "url": "https://api.github.com/repos/ccxvii/mujs/tags",
+            "tag-pattern": "^([\\d.]+)$"
+          }
+        }
+      ]
+    },
+     {
+      "name": "vapoursynth",
+      "config-opts": [
+        "--disable-static",
+        "--with-python_prefix=/app"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/vapoursynth/vapoursynth.git",
+          "tag": "R66",
+          "commit": "fe6c67cdb17f41160c79434f0240077f74de9fd1",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^R([\\d.]+)$"
+          }
+        }
+      ]
+    },
+    {
+    "name": "x264",
+    "cleanup": [
+      "/include",
+      "/lib/pkgconfig",
+      "/share/man"
+    ],
+    "config-opts": [
+      "--disable-cli",
+      "--enable-shared"
+    ],
+    "sources": [
+      {
+        "type": "git",
+        "url": "https://github.com/jpsdr/x264",
+        "mirror-urls": [
+          "https://code.videolan.org/videolan/x264.git"
+        ],
+        "commit": "7ed753b10a61d0be95f683289dfb925b800b0676",
+        "x-checker-data": {
+          "type": "json",
+          "url": "https://code.videolan.org/api/v4/projects/536/repository/commits",
+          "commit-query": "first( .[].id )",
+          "version-query": "first( .[].id )",
+          "timestamp-query": "first( .[].committed_date )"
+        }
+      }
+    ]
+  },
+      {
+      "name": "x265",
+      "buildsystem": "cmake",
+      "subdir": "source",
+      "config-opts": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_STATIC=0"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/share/man"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/multicoreware/x265_git.git",
+          "tag": "3.6",
+          "commit": "aa7f602f7592eddb9d87749be7466da005b556ee",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^([\\d.]+)$"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ffmpeg",
+      "cleanup": [
+        "/share/ffmpeg/examples"
+      ],
+      "config-opts": [
+        "--disable-debug",
+        "--disable-doc",
+        "--disable-programs",
+        "--disable-static",
+        "--disable-encoders",
+        "--disable-muxers",
+        "--enable-shared",
+        "--enable-gnutls",
+        "--enable-gpl",
+        "--enable-version3",
+        "--enable-encoder=png,libwebp,libjxl",
+        "--enable-libv4l2",
+        "--enable-libdav1d",
+        "--enable-libfontconfig",
+        "--enable-libfreetype",
+        "--enable-libopus",
+        "--enable-libmysofa",
+        "--enable-librsvg",
+        "--enable-libvpx",
+        "--enable-libmp3lame",
+        "--enable-libx264",
+        "--enable-libx265",
+        "--enable-libwebp",
+        "--enable-libjxl",
+        "--enable-libxml2"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://ffmpeg.org/releases/ffmpeg-7.0.tar.gz",
+          "sha256": "943a2a28044947c17a905c39075494b0da46ec0795224c2c61eff986518321eb",
+          "x-checker-data": {
+            "type": "anitya",
+            "project-id": 5405,
+            "stable-only": true,
+            "url-template": "https://ffmpeg.org/releases/ffmpeg-$version.tar.gz"
+          }
+        },
+        {
+          "name": "libjxl",
+          "buildsystem": "cmake-ninja",
+          "config-opts": [
+            "-DJPEGXL_ENABLE_JPEGLI=OFF",
+            "-DBUILD_TESTING=OFF",
+            "-DJPEGXL_ENABLE_BENCHMARK=OFF",
+            "-DJPEGXL_ENABLE_COVERAGE=OFF",
+            "-DJPEGXL_ENABLE_EXAMPLES=OFF",
+            "-DJPEGXL_ENABLE_FUZZERS=OFF",
+            "-DJPEGXL_ENABLE_JNI=OFF",
+            "-DJPEGXL_ENABLE_SJPEG=OFF",
+            "-DJPEGXL_ENABLE_SKCMS=OFF",
+            "-DJPEGXL_ENABLE_TOOLS=OFF",
+            "-DJPEGXL_ENABLE_VIEWERS=OFF"
+          ],
+          "sources": [
+            {
+              "type": "archive",
+              "url": "https://github.com/libjxl/libjxl/archive/refs/tags/v0.10.2.tar.gz",
+              "sha256": "95e807f63143856dc4d161c071cca01115d2c6405b3d3209854ac6989dc6bb91",
+              "x-checker-data": {
+                "type": "anitya",
+                "project-id": 232764,
+                "stable-only": true,
+                "url-template": "https://github.com/libjxl/libjxl/archive/refs/tags/v$version.tar.gz"
+              }
+            },
+            {
+              "name": "highway",
+              "buildsystem": "cmake-ninja",
+              "config-opts": [
+                "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                "-DBUILD_TESTING=OFF",
+                "-DBUILD_SHARED_LIBS=ON"
+              ],
+              "sources": [
+                {
+                  "type": "archive",
+                  "url": "https://github.com/google/highway/archive/refs/tags/1.1.0.tar.gz",
+                  "sha256": "354a8b4539b588e70b98ec70844273e3f2741302c4c377bcc4e81b3d1866f7c9",
+                  "x-checker-data": {
+                    "type": "anitya",
+                    "project-id": 205809,
+                    "stable-only": true,
+                    "url-template": "https://github.com/google/highway/archive/refs/tags/$version.tar.gz"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "libmpv",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dlibmpv=true",
+        "-Dlua=enabled",
+        "-Ddebug=false",
+        "-Dbuild-date=false",
+        "-Dtests=false",
+        "-Dalsa=disabled",
+        "-Djack=enabled",
+        "-Dpipewire=enabled",
+        "-Dpulse=enabled",
+        "-Ddrm=enabled",
+        "-Degl=enabled",
+        "-Dx11=enabled",
+        "-Dwayland=enabled",
+        "-Degl-drm=enabled",
+        "-Dgpl=true",
+        "-Dlibbluray=enabled",
+        "-Dcdda=enabled",
+        "-Ddvbin=enabled",
+        "-Ddvdnav=enabled",
+        "-Dlibarchive=enabled",
+        "-Dcuda-hwaccel=enabled",
+        "-Dvdpau=enabled",
+        "-Dvaapi=enabled",
+        "-Dvulkan=enabled",
+        "-Duchardet=enabled",
+        "-Dmanpage-build=disabled"
+      ],
+      "cleanup": ["/lib/pkgconfig", "/share", "/include"],
+      "dependencies": [
+        "libplacebo",
+        "libass",
+        "luajit",
+        "uchardet",
+        "libdvdnav",
+        "libdvdread",
+        "zimg",
+        "nv-codec-headers"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/mpv-player/mpv/archive/refs/tags/v0.38.0.tar.gz",
+          "sha256": "86d9ef40b6058732f67b46d0bbda24a074fae860b3eaae05bab3145041303066"
+        }
+      ]
+    },
+    {
+      "name": "mpc-qt",
+      "buildsystem": "qmake",
+      "dependencies": [
+        "libmpv",
+        "yt-dlp"
+      ],
+      "build-options": {
+        "env": {
+          "MPCQT_VERSION": "24.12"
+        }
+      },
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/mpc-qt/mpc-qt.git",
+          "branch": "release/24.12"
+        }
+      ]
+    },
+    {
+      "name": "yt-dlp",
+      "no-autogen": true,
+      "no-make-install": true,
+      "make-args": [
+        "yt-dlp",
+        "PYTHON=/usr/bin/python3"
+      ],
+      "post-install": [
+        "install yt-dlp /app/bin"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/2024.04.09.tar.gz",
+          "sha256": "fa2a21946b886f914ccc5ee18a9dc41b628745a51e04d136c6baec06ed4bded6",
+          "x-checker-data": {
+            "type": "anitya",
+            "project-id": 143399,
+            "stable-only": true,
+            "url-template": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/$version.tar.gz"
+          }
+        }
+      ]
+    }
+    ]
+    }
