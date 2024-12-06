@@ -28,6 +28,7 @@ jobs:
     uses: ./.github/workflows/linux_tests.yml
 
   flatpak:
+    name: Flatpak
     needs: tests
     runs-on: ubuntu-latest
     container:
@@ -40,8 +41,11 @@ jobs:
       - run: git config --global protocol.file.allow always
 
       - name: Get version
-        run: echo "MPC-QT_PACKAGE_VERSION=$(echo $GITHUB_REF | sed 's,refs/tags/v,,g')">> $GITHUB_ENV
-
+        run: |
+          if [[ "$GITHUB_REF" == *"tags/v"* ]]; then
+            echo "MPC-QT_PACKAGE_VERSION=$(echo $GITHUB_REF | sed 's,refs/tags/v,,g')">> $GITHUB_ENV
+          else
+            echo "MPC-QT_PACKAGE_VERSION=continuous">> $GITHUB_ENV
       - uses: flatpak/flatpak-github-actions/flatpak-builder@master
         name: "Build"
         with:
@@ -50,8 +54,8 @@ jobs:
           cache-key: flatpak-builder-${{ github.sha }}
           upload-artifact: false
 
-      # - name: Upload
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: package-${{ env.PACKAGE_PREFIX }}-flatpak-x86_64
-      #     path: ${{github.workspace}}/mpc-qt[-_]*.flatpak
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-mpc-qt-flatpak-x86_64
+          path: ${{github.workspace}}/mpc-qt[-_]*.flatpak
