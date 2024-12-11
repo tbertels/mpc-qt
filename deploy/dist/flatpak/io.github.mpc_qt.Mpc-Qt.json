@@ -3,6 +3,13 @@
   "app-version": "24.12",
   "runtime": "org.kde.Platform",
   "runtime-version": "6.8",
+  "add-extensions": {
+    "org.freedesktop.Platform.ffmpeg-full": {
+      "version": "24.08",
+      "autodownload": true,
+      "autodelete": false
+    }
+  },
   "sdk": "org.kde.Sdk",
   "metadata": {
     "appdata": "io.github.mpc_qt.Mpc-Qt.appdata.xml"
@@ -14,7 +21,7 @@
   "finish-args": [
     "--share=ipc",
     "--share=network",
-    "--socket=fallback-x11",
+    "--socket=x11",
     "--socket=wayland",
     "--socket=pulseaudio",
     "--device=dri",
@@ -85,65 +92,32 @@
       ]
     },
     {
-    "name": "glslang",
-    "buildsystem": "cmake-ninja",
-    "config-opts": ["-DBUILD_SHARED_LIBS=ON"],
-    "cleanup": ["/bin", "/include", "/lib/cmake"],
-    "sources": [
-      {
-        "type": "archive",
-        "url": "https://github.com/KhronosGroup/glslang/archive/14.1.0.tar.gz",
-        "sha256": "b5e4c36d60eda7613f36cfee3489c6f507156829c707e1ecd7f48ca45b435322",
-        "x-checker-data": {
-          "type": "anitya",
-          "project-id": 205796,
-          "stable-only": true,
-          "url-template": "https://github.com/KhronosGroup/glslang/archive/$version.tar.gz"
+      "name": "libplacebo",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dvulkan=enabled",
+        "-Dshaderc=enabled"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/haasn/libplacebo.git",
+          "mirror-urls": [
+            "https://code.videolan.org/videolan/libplacebo.git"
+          ],
+          "tag": "v7.349.0",
+          "commit": "1fd3c7bde7b943fe8985c893310b5269a09b46c5",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^v([\\d.]+)$"
+          }
         }
-      },
-      {
-        "type": "archive",
-        "url": "https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/sdk-1.3.261.1.tar.gz",
-        "sha256": "ead95c626ad482882a141d1aa0ce47b9453871f72c42c0b28d39c82f60a52008",
-        "dest": "External/spirv-tools",
-        "x-checker-data": {
-          "type": "anitya",
-          "stable-only": true,
-          "project-id": 334920,
-          "url-template": "https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/sdk-$version.tar.gz"
-        }
-      },
-      {
-        "type": "archive",
-        "url": "https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/sdk-1.3.261.1.tar.gz",
-        "sha256": "32b4c6ae6a2fa9b56c2c17233c8056da47e331f76e117729925825ea3e77a739",
-        "dest": "External/spirv-tools/external/spirv-headers",
-        "x-checker-data": {
-          "type": "anitya",
-          "stable-only": true,
-          "project-id": 334920,
-          "url-template": "https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/sdk-$version.tar.gz"
-        }
-      }
-    ]
-  },
-  {
-    "name": "libXpresent",
-    "buildsystem": "autotools",
-    "sources": [
-      {
-        "type": "archive",
-        "url": "https://xorg.freedesktop.org/archive/individual/lib/libXpresent-1.0.1.tar.xz",
-        "sha256": "b964df9e5a066daa5e08d2dc82692c57ca27d00b8cc257e8e960c9f1cf26231b",
-        "x-checker-data": {
-          "type": "anitya",
-          "project-id": 17166,
-          "stable-only": true,
-          "url-template": "https://xorg.freedesktop.org/archive/individual/lib/libXpresent-$version.tar.xz"
-        }
-      }
-    ]
-  },
+      ]
+    },
     {
       "name": "uchardet",
       "buildsystem": "cmake-ninja",
@@ -164,36 +138,6 @@
             "project-id": 9265,
             "stable-only": true,
             "url-template": "https://www.freedesktop.org/software/uchardet/releases/uchardet-$version.tar.xz"
-          }
-        }
-      ]
-    },
-    {
-      "name": "libv4l2",
-      "buildsystem": "meson",
-      "cleanup": [
-        "/include",
-        "/lib/pkgconfig",
-        "/share/man"
-      ],
-      "config-opts": [
-        "-Ddoxygen-html=false",
-        "-Ddoxygen-doc=disabled",
-        "-Dbpf=disabled",
-        "-Dudevdir=/app/lib/udev"
-      ],
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://git.linuxtv.org/v4l-utils.git",
-          "mirror-urls": [
-            "https://github.com/gjasny/v4l-utils.git"
-          ],
-          "tag": "v4l-utils-1.26.1",
-          "commit": "4aee01a027923cab1e40969f56f8ba58d3e6c0d1",
-          "x-checker-data": {
-            "type": "git",
-            "tag-pattern": "^v4l-utils-([\\d.]+)$"
           }
         }
       ]
@@ -367,33 +311,6 @@
       ]
     },
     {
-      "name": "libplacebo",
-      "buildsystem": "meson",
-      "config-opts": [
-        "-Dvulkan=enabled",
-        "-Dshaderc=enabled"
-      ],
-      "cleanup": [
-        "/include",
-        "/lib/pkgconfig"
-      ],
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://github.com/haasn/libplacebo.git",
-          "mirror-urls": [
-            "https://code.videolan.org/videolan/libplacebo.git"
-          ],
-          "tag": "v6.338.2",
-          "commit": "64c1954570f1cd57f8570a57e51fb0249b57bb90",
-          "x-checker-data": {
-            "type": "git",
-            "tag-pattern": "^v([\\d.]+)$"
-          }
-        }
-      ]
-    },
-    {
       "name": "nv-codec-headers",
       "cleanup": [
         "*"
@@ -488,62 +405,6 @@
         }
       ]
     },
-    {
-      "name": "rubberband",
-      "buildsystem": "meson",
-      "cleanup": [
-        "/include",
-        "/lib/pkgconfig"
-      ],
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://github.com/breakfastquay/rubberband.git",
-          "mirror-urls": [
-            "https://hg.sr.ht/~breakfastquay/rubberband"
-          ],
-          "tag": "v3.3.0",
-          "commit": "2be46b0dffb13273a67396c77bc9278736bb03d2",
-          "x-checker-data": {
-            "type": "git",
-            "tag-pattern": "^v([\\d.]+)$"
-          }
-        }
-      ]
-    },
-    {
-      "name": "mujs",
-      "buildsystem": "autotools",
-      "no-autogen": true,
-      "make-args": [
-        "release"
-      ],
-      "make-install-args": [
-        "prefix=/app",
-        "install-shared"
-      ],
-      "cleanup": [
-        "/bin",
-        "/include",
-        "/lib/pkgconfig"
-      ],
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://github.com/ccxvii/mujs.git",
-          "mirror-urls": [
-            "http://git.ghostscript.com/mujs.git"
-          ],
-          "tag": "1.3.4",
-          "commit": "a76d157bdaa9aec8de5ea5a362eed2f59139152d",
-          "x-checker-data": {
-            "type": "git",
-            "url": "https://api.github.com/repos/ccxvii/mujs/tags",
-            "tag-pattern": "^([\\d.]+)$"
-          }
-        }
-      ]
-    },
      {
       "name": "vapoursynth",
       "config-opts": [
@@ -563,195 +424,101 @@
         }
       ]
     },
+ {
+  "name": "libmpv",
+  "buildsystem": "meson",
+  "config-opts": [
+    "-Dlibmpv=true",
+    "-Dlua=enabled",
+    "-Ddebug=false",
+    "-Dbuild-date=false",
+    "-Dtests=false",
+    "-Dalsa=disabled",
+    "-Djack=enabled",
+    "-Dpipewire=enabled",
+    "-Dpulse=enabled",
+    "-Ddrm=enabled",
+    "-Degl=enabled",
+    "-Dx11=enabled",
+    "-Dwayland=enabled",
+    "-Degl-drm=enabled",
+    "-Dgpl=true",
+    "-Dlibbluray=enabled",
+    "-Dcdda=enabled",
+    "-Ddvbin=enabled",
+    "-Ddvdnav=enabled",
+    "-Dlibarchive=enabled",
+    "-Dcuda-hwaccel=enabled",
+    "-Dvdpau=enabled",
+    "-Dvaapi=enabled",
+    "-Dvulkan=enabled",
+    "-Duchardet=enabled",
+    "-Dmanpage-build=disabled"
+  ],
+  "cleanup": ["/lib/pkgconfig", "/share", "/include"],
+  "dependencies": [
+    "ffmpeg",
+    "libplacebo",
+    "libass",
+    "luajit",
+    "uchardet",
+    "libdvdnav",
+    "libdvdread",
+    "zimg",
+    "nv-codec-headers"
+  ],
+  "sources": [
     {
-      "name": "ffmpeg",
-      "cleanup": [
-        "/share/ffmpeg/examples"
-      ],
-      "config-opts": [
-        "--disable-debug",
-        "--disable-doc",
-        "--disable-programs",
-        "--disable-static",
-        "--disable-encoders",
-        "--disable-muxers",
-        "--enable-shared",
-        "--enable-gnutls",
-        "--enable-gpl",
-        "--enable-version3",
-        "--enable-encoder=png,libwebp,libjxl",
-        "--enable-libv4l2",
-        "--enable-libdav1d",
-        "--enable-libfontconfig",
-        "--enable-libfreetype",
-        "--enable-libopus",
-        "--enable-libmysofa",
-        "--enable-librsvg",
-        "--enable-libvpx",
-        "--enable-libmp3lame",
-        "--enable-libwebp",
-        "--enable-libjxl",
-        "--enable-libxml2"
-      ],
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://ffmpeg.org/releases/ffmpeg-7.0.tar.gz",
-          "sha256": "943a2a28044947c17a905c39075494b0da46ec0795224c2c61eff986518321eb",
-          "x-checker-data": {
-            "type": "anitya",
-            "project-id": 5405,
-            "stable-only": true,
-            "url-template": "https://ffmpeg.org/releases/ffmpeg-$version.tar.gz"
-          }
-        },
-        {
-          "name": "libjxl",
-          "buildsystem": "cmake-ninja",
-          "config-opts": [
-            "-DJPEGXL_ENABLE_JPEGLI=OFF",
-            "-DBUILD_TESTING=OFF",
-            "-DJPEGXL_ENABLE_BENCHMARK=OFF",
-            "-DJPEGXL_ENABLE_COVERAGE=OFF",
-            "-DJPEGXL_ENABLE_EXAMPLES=OFF",
-            "-DJPEGXL_ENABLE_FUZZERS=OFF",
-            "-DJPEGXL_ENABLE_JNI=OFF",
-            "-DJPEGXL_ENABLE_SJPEG=OFF",
-            "-DJPEGXL_ENABLE_SKCMS=OFF",
-            "-DJPEGXL_ENABLE_TOOLS=OFF",
-            "-DJPEGXL_ENABLE_VIEWERS=OFF"
-          ],
-          "sources": [
-            {
-              "type": "archive",
-              "url": "https://github.com/libjxl/libjxl/archive/refs/tags/v0.10.2.tar.gz",
-              "sha256": "95e807f63143856dc4d161c071cca01115d2c6405b3d3209854ac6989dc6bb91",
-              "x-checker-data": {
-                "type": "anitya",
-                "project-id": 232764,
-                "stable-only": true,
-                "url-template": "https://github.com/libjxl/libjxl/archive/refs/tags/v$version.tar.gz"
-              }
-            },
-            {
-              "name": "highway",
-              "buildsystem": "cmake-ninja",
-              "config-opts": [
-                "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
-                "-DBUILD_TESTING=OFF",
-                "-DBUILD_SHARED_LIBS=ON"
-              ],
-              "sources": [
-                {
-                  "type": "archive",
-                  "url": "https://github.com/google/highway/archive/refs/tags/1.1.0.tar.gz",
-                  "sha256": "354a8b4539b588e70b98ec70844273e3f2741302c4c377bcc4e81b3d1866f7c9",
-                  "x-checker-data": {
-                    "type": "anitya",
-                    "project-id": 205809,
-                    "stable-only": true,
-                    "url-template": "https://github.com/google/highway/archive/refs/tags/$version.tar.gz"
-                  }
-                }
-              ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "libmpv",
-      "buildsystem": "meson",
-      "config-opts": [
-        "-Dlibmpv=true",
-        "-Dlua=enabled",
-        "-Ddebug=false",
-        "-Dbuild-date=false",
-        "-Dtests=false",
-        "-Dalsa=disabled",
-        "-Djack=enabled",
-        "-Dpipewire=enabled",
-        "-Dpulse=enabled",
-        "-Ddrm=enabled",
-        "-Degl=enabled",
-        "-Dx11=enabled",
-        "-Degl-drm=enabled",
-        "-Dgpl=true",
-        "-Dlibbluray=enabled",
-        "-Dcdda=enabled",
-        "-Ddvbin=enabled",
-        "-Ddvdnav=enabled",
-        "-Dlibarchive=enabled",
-        "-Dcuda-hwaccel=enabled",
-        "-Dvdpau=enabled",
-        "-Dvaapi=enabled",
-        "-Dvulkan=enabled",
-        "-Duchardet=enabled",
-        "-Dmanpage-build=disabled"
-      ],
-      "cleanup": ["/lib/pkgconfig", "/share", "/include"],
-      "dependencies": [
-        "libplacebo",
-        "libass",
-        "luajit",
-        "uchardet",
-        "libdvdnav",
-        "libdvdread",
-        "zimg",
-        "nv-codec-headers"
-      ],
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://github.com/mpv-player/mpv/archive/refs/tags/v0.38.0.tar.gz",
-          "sha256": "86d9ef40b6058732f67b46d0bbda24a074fae860b3eaae05bab3145041303066"
-        }
-      ]
-    },
-    {
-      "name": "mpc-qt",
-      "buildsystem": "qmake",
-      "dependencies": [
-        "libmpv",
-        "yt-dlp"
-      ],
-      "build-options": {
-        "env": {
-          "MPCQT_VERSION": "24.12"
-        }
-      },
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://github.com/mpc-qt/mpc-qt.git",
-          "branch": "release/24.12"
-        }
-      ]
-    },
-    {
-      "name": "yt-dlp",
-      "no-autogen": true,
-      "no-make-install": true,
-      "make-args": [
-        "yt-dlp",
-        "PYTHON=/usr/bin/python3"
-      ],
-      "post-install": [
-        "install yt-dlp /app/bin"
-      ],
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/2024.04.09.tar.gz",
-          "sha256": "fa2a21946b886f914ccc5ee18a9dc41b628745a51e04d136c6baec06ed4bded6",
-          "x-checker-data": {
-            "type": "anitya",
-            "project-id": 143399,
-            "stable-only": true,
-            "url-template": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/$version.tar.gz"
-          }
-        }
-      ]
+      "type": "git",
+      "url": "https://github.com/mpv-player/mpv.git",
+      "branch": "master"
     }
-    ]
+  ]
+},
+{
+  "name": "mpc-qt",
+  "buildsystem": "qmake",
+  "dependencies": [
+    "libmpv",
+    "yt-dlp"
+  ],
+  "build-options": {
+    "env": {
+      "MPCQT_VERSION": "master"
     }
+  },
+  "sources": [
+    {
+      "type": "git",
+      "url": "https://github.com/mpc-qt/mpc-qt.git",
+      "branch": "master"
+    }
+  ]
+},
+{
+  "name": "yt-dlp",
+  "no-autogen": true,
+  "no-make-install": true,
+  "make-args": [
+    "yt-dlp",
+    "PYTHON=/usr/bin/python3"
+  ],
+  "post-install": [
+    "install yt-dlp /app/bin"
+  ],
+  "sources": [
+    {
+      "type": "archive",
+      "url": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/2024.12.06.tar.gz",
+      "sha256": "43b4c86dd39fe5ba616873cddff4c7b4c940d577d1e49f2f9729807028fe33ff",
+      "x-checker-data": {
+        "type": "anitya",
+        "project-id": 143399,
+        "stable-only": true,
+        "url-template": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/$version.tar.gz"
+      }
+    }
+  ]
+}
+]
+}
