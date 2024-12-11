@@ -424,101 +424,101 @@
         }
       ]
     },
- {
-  "name": "libmpv",
-  "buildsystem": "meson",
-  "config-opts": [
-    "-Dlibmpv=true",
-    "-Dlua=enabled",
-    "-Ddebug=false",
-    "-Dbuild-date=false",
-    "-Dtests=false",
-    "-Dalsa=disabled",
-    "-Djack=enabled",
-    "-Dpipewire=enabled",
-    "-Dpulse=enabled",
-    "-Ddrm=enabled",
-    "-Degl=enabled",
-    "-Dx11=enabled",
-    "-Dwayland=enabled",
-    "-Degl-drm=enabled",
-    "-Dgpl=true",
-    "-Dlibbluray=enabled",
-    "-Dcdda=enabled",
-    "-Ddvbin=enabled",
-    "-Ddvdnav=enabled",
-    "-Dlibarchive=enabled",
-    "-Dcuda-hwaccel=enabled",
-    "-Dvdpau=enabled",
-    "-Dvaapi=enabled",
-    "-Dvulkan=enabled",
-    "-Duchardet=enabled",
-    "-Dmanpage-build=disabled"
-  ],
-  "cleanup": ["/lib/pkgconfig", "/share", "/include"],
-  "dependencies": [
-    "ffmpeg",
-    "libplacebo",
-    "libass",
-    "luajit",
-    "uchardet",
-    "libdvdnav",
-    "libdvdread",
-    "zimg",
-    "nv-codec-headers"
-  ],
-  "sources": [
     {
-      "type": "git",
-      "url": "https://github.com/mpv-player/mpv.git",
-      "branch": "master"
-    }
-  ]
-},
-{
-  "name": "mpc-qt",
-  "buildsystem": "qmake",
-  "dependencies": [
-    "libmpv",
-    "yt-dlp"
-  ],
-  "build-options": {
-    "env": {
-      "MPCQT_VERSION": "master"
-    }
-  },
-  "sources": [
+      "name": "libmpv",
+      "buildsystem": "meson",
+      "config-opts": [
+        "-Dlibmpv=true",
+        "-Dlua=enabled",
+        "-Ddebug=false",
+        "-Dbuild-date=false",
+        "-Dtests=false",
+        "-Dalsa=disabled",
+        "-Djack=enabled",
+        "-Dpipewire=enabled",
+        "-Dpulse=enabled",
+        "-Ddrm=enabled",
+        "-Degl=enabled",
+        "-Dx11=enabled",
+        "-Dwayland=enabled",
+        "-Degl-drm=enabled",
+        "-Dgpl=true",
+        "-Dlibbluray=enabled",
+        "-Dcdda=enabled",
+        "-Ddvbin=enabled",
+        "-Ddvdnav=enabled",
+        "-Dlibarchive=enabled",
+        "-Dcuda-hwaccel=enabled",
+        "-Dvdpau=enabled",
+        "-Dvaapi=enabled",
+        "-Dvulkan=enabled",
+        "-Duchardet=enabled",
+        "-Dmanpage-build=disabled"
+      ],
+      "cleanup": ["/lib/pkgconfig", "/share", "/include"],
+      "dependencies": [
+        "ffmpeg",
+        "libplacebo",
+        "libass",
+        "luajit",
+        "uchardet",
+        "libdvdnav",
+        "libdvdread",
+        "zimg",
+        "nv-codec-headers"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/mpv-player/mpv.git",
+          "branch": "master"
+        }
+      ]
+    },
     {
-      "type": "git",
-      "url": "https://github.com/mpc-qt/mpc-qt.git",
-      "branch": "master"
-    }
-  ]
-},
-{
-  "name": "yt-dlp",
-  "no-autogen": true,
-  "no-make-install": true,
-  "make-args": [
-    "yt-dlp",
-    "PYTHON=/usr/bin/python3"
-  ],
-  "post-install": [
-    "install yt-dlp /app/bin"
-  ],
-  "sources": [
+      "name": "mpc-qt",
+      "buildsystem": "qmake",
+      "dependencies": [
+        "libmpv",
+        "yt-dlp"
+      ],
+      "build-options": {
+        "env": {
+          "MPCQT_VERSION": "master"
+        }
+      },
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/mpc-qt/mpc-qt.git",
+          "branch": "master"
+        }
+      ]
+    },
     {
-      "type": "archive",
-      "url": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/2024.12.06.tar.gz",
-      "sha256": "43b4c86dd39fe5ba616873cddff4c7b4c940d577d1e49f2f9729807028fe33ff",
-      "x-checker-data": {
-        "type": "anitya",
-        "project-id": 143399,
-        "stable-only": true,
-        "url-template": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/$version.tar.gz"
-      }
+      "name": "yt-dlp",
+      "no-autogen": true,
+      "no-make-install": true,
+      "make-args": [
+        "yt-dlp",
+        "PYTHON=/usr/bin/python3"
+      ],
+      "post-install": [
+        "install yt-dlp /app/bin"
+      ],
+      "sources": [
+        {
+          "type": "archive",
+          "url": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/2024.12.06.tar.gz",
+          "sha256": "43b4c86dd39fe5ba616873cddff4c7b4c940d577d1e49f2f9729807028fe33ff",
+          "x-checker-data": {
+            "type": "anitya",
+            "project-id": 143399,
+            "stable-only": true,
+            "url-template": "https://github.com/yt-dlp/yt-dlp/archive/refs/tags/$version.tar.gz"
+          }
+        }
+      ]
     }
-  ]
-}
 ]
 }
