@@ -34,7 +34,7 @@ jobs:
 
     steps:
     - name: Install packages
-      run: sudo apt-get -y install libfuse2 libqt6svg6-dev libgl-dev libmpv-dev qmake6
+      run: sudo apt-get -y install libfuse2 libqt6svg6-dev libqt6openglwidgets6 libmpv-dev qmake6
     - name: Download mpc-qt AppDir
       uses: actions/download-artifact@v4
       with:
