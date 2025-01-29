@@ -1,0 +1,44 @@
+name: AppImage maker
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install packages
+      run: sudo apt-get -y install build-essential qmake6 qt6-base-dev qt6-l10n-tools libqt6svg6-dev libgl-dev libmpv-dev
+    - uses: actions/checkout@v4
+    - name: qmake
+      run: qmake6 MPCQT_VERSION=GithubAction mpc-qt.pro
+    - name: make
+      run: make
+    - name: make install
+      run: make install INSTALL_ROOT=AppDir
+    - name: ls AppDir
+      run:  ls AppDir
+
+  craft:
+    name: AppImage
+    runs-on: ubuntu-latest
+
+    steps:
+    # - name: Download mpc-qt build
+    #   uses: actions/download-artifact@v4
+    - name: Install LinuxDeploy
+      uses: miurahr/install-linuxdeploy-action@v1
+      with:
+        plugins: qt appimage
+    - name: Build AppImage
+      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 ./linuxdeploy-x86_64.AppImage --appdir AppDir -e bin/mpc-qt -i "$REPO_ROOT"/images/icon/mpc-qt.svg -d "$REPO_ROOT"/mpc-qt.desktop --plugin qt --output appimage
+    - name: ls
+      run:  ls
+    # - name: Upload
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: "mpc-qt-linux-x64.AppImage"
+    #     path: 
