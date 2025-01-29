@@ -19,8 +19,8 @@ jobs:
       run: make
     - name: make install
       run: make install INSTALL_ROOT=AppDir
-    - name: ls AppDir/usr/bin
-      run:  ls AppDir/usr/bin
+    - name: ls AppDir/usr
+      run:  ls AppDir/usr
 
   craft:
     name: AppImage
