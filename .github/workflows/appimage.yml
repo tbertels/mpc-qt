@@ -19,8 +19,8 @@ jobs:
       run: make
     - name: make install
       run: make install INSTALL_ROOT=AppDir
-    - name: ls AppDir
-      run:  ls AppDir
+    - name: ls AppDir/usr/bin
+      run:  ls AppDir/usr/bin
 
   craft:
     name: AppImage
@@ -34,8 +34,10 @@ jobs:
       uses: miurahr/install-linuxdeploy-action@v1
       with:
         plugins: qt appimage
+    - name: ls
+      run:  ls
     - name: Build AppImage
-      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 ./linuxdeploy-x86_64.AppImage --appdir AppDir -e bin/mpc-qt -i "$REPO_ROOT"/images/icon/mpc-qt.svg -d "$REPO_ROOT"/mpc-qt.desktop --plugin qt --output appimage
+      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir -e bin/mpc-qt -i "$REPO_ROOT"/images/icon/mpc-qt.svg -d "$REPO_ROOT"/mpc-qt.desktop --plugin qt --output appimage
     - name: ls
       run:  ls
     # - name: Upload
