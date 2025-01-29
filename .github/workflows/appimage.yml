@@ -50,8 +50,10 @@ jobs:
       run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir -e AppDir/usr/local/bin/mpc-qt -i AppDir/usr/local/share/icons/hicolor/scalable/apps/mpc-qt.svg -d AppDir/usr/local/share/applications/mpc-qt.desktop --plugin qt --output appimage
     - name: ls
       run:  ls
-    # - name: Upload
-    #   uses: actions/upload-artifact@v4
-    #   with:
-    #     name: "mpc-qt-linux-x64.AppImage"
-    #     path: 
+    - name: Rename AppImage
+      run:  mv *.AppImage mpc-qt-x86_64.AppImage
+    - name: Upload AppImage
+      uses: actions/upload-artifact@v4
+      with:
+        name: "mpc-qt-x86_64.AppImage"
+        path: ./mpc-qt-x86_64.AppImage
