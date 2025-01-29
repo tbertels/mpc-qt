@@ -25,6 +25,7 @@ jobs:
   craft:
     name: AppImage
     runs-on: ubuntu-latest
+    needs: build
 
     steps:
     # - name: Download mpc-qt build
