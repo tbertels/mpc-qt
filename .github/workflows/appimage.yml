@@ -44,16 +44,23 @@ jobs:
       with:
         name: AppDir
         path: AppDir
+    - uses: geekyeggo/delete-artifact@v5
+      with:
+          name: AppDir
     - name: Install LinuxDeploy
       uses: miurahr/install-linuxdeploy-action@v1
       with:
         plugins: qt appimage
-    - name: ls
-      run:  ls
+    - name: ls -R
+      run:  ls -R
+    - name: Move from AppDir/usr/local/ AppDir/usr/
+      run:  mv AppDir/usr/local/* AppDir/usr/
+    - name: Remove AppDir/usr/local
+      run:  rmdir AppDir/usr/local
     - name: Build AppImage
-      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir -e AppDir/usr/local/bin/mpc-qt -i AppDir/usr/local/share/icons/hicolor/scalable/apps/mpc-qt.svg -d AppDir/usr/local/share/applications/mpc-qt.desktop --plugin qt --output appimage
-    - name: ls
-      run:  ls
+      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir -e AppDir/usr/bin/mpc-qt -i AppDir/usr/share/icons/hicolor/scalable/apps/mpc-qt.svg -d AppDir/usr/share/applications/mpc-qt.desktop --plugin qt --output appimage
+    - name: ls -R
+      run:  ls -R
     - name: Rename AppImage
       run:  mv *.AppImage mpc-qt-x86_64.AppImage
     - name: Upload AppImage
