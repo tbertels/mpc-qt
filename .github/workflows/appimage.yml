@@ -63,7 +63,7 @@ jobs:
     - name: Remove AppDir/usr/local
       run:  rmdir AppDir/usr/local
     - name: Build AppImage
-      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir --deploy-deps-only /usr/lib/dri -i AppDir/usr/share/icons/hicolor/scalable/apps/mpc-qt.svg --plugin qt --output appimage
+      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun ./AppImage/AppRun --plugin qt --output appimage
     - name: ls -R -l
       run:  ls -R -l
     - name: Rename AppImage
