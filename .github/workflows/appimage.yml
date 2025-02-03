@@ -21,8 +21,8 @@ jobs:
       run: make
     - name: make install
       run: make install INSTALL_ROOT=AppDir
-    - name: ls -R AppDir
-      run:  ls -R AppDir
+    - name: ls -R -l AppDir
+      run:  ls -R -l AppDir
     - name: Upload mpc-qt AppDir
       uses: actions/upload-artifact@v4
       with:
@@ -51,8 +51,8 @@ jobs:
       uses: miurahr/install-linuxdeploy-action@v1
       with:
         plugins: qt appimage
-    - name: ls -R
-      run:  ls -R
+    - name: ls -R -l
+      run:  ls -R -l
     - name: Move from AppDir/usr/local/ AppDir/usr/
       run:  mv AppDir/usr/local/* AppDir/usr/
     - name: Make sure mpc-qt is executable
@@ -60,9 +60,9 @@ jobs:
     - name: Remove AppDir/usr/local
       run:  rmdir AppDir/usr/local
     - name: Build AppImage
-      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir -e AppDir/usr/bin/mpc-qt -i AppDir/usr/share/icons/hicolor/scalable/apps/mpc-qt.svg -d AppDir/usr/share/applications/mpc-qt.desktop --plugin qt --output appimage
-    - name: ls -R
-      run:  ls -R
+      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir -i AppDir/usr/share/icons/hicolor/scalable/apps/mpc-qt.svg --plugin qt --output appimage
+    - name: ls -R -l
+      run:  ls -R -l
     - name: Rename AppImage
       run:  mv *.AppImage mpc-qt-x86_64.AppImage
     - name: Upload AppImage
