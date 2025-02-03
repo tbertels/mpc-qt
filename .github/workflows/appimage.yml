@@ -14,7 +14,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get -y install build-essential qmake6 qt6-base-dev qt6-l10n-tools libqt6svg6-dev libgl-dev libmpv-dev
-    - uses: actions/checkout@v4
+    - name: Checkout repository
+      uses: actions/checkout@v4
     - name: qmake
       run: qmake6 MPCQT_VERSION=GithubAction mpc-qt.pro
     - name: make
@@ -39,6 +40,8 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get -y install libfuse2 libqt6svg6-dev libqt6openglwidgets6 libmpv-dev qmake6
+    - name: Checkout repository
+      uses: actions/checkout@v4
     - name: Download mpc-qt AppDir
       uses: actions/download-artifact@v4
       with:
@@ -60,7 +63,7 @@ jobs:
     - name: Remove AppDir/usr/local
       run:  rmdir AppDir/usr/local
     - name: Build AppImage
-      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir -i AppDir/usr/share/icons/hicolor/scalable/apps/mpc-qt.svg --plugin qt --output appimage
+      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun=./AppImage/AppRun -i AppDir/usr/share/icons/hicolor/scalable/apps/mpc-qt.svg --plugin qt --output appimage
     - name: ls -R -l
       run:  ls -R -l
     - name: Rename AppImage
