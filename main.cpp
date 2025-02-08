@@ -426,7 +426,7 @@ void Flow::earlyPlatformOverride()
     } else if (!qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY")) {
         settingsDisableWindowManagement = true;
     }
-    qputenv("QT_XCB_GL_INTEGRATION", "xcb_egl");
+    // qputenv("QT_XCB_GL_INTEGRATION", "xcb_egl");
 }
 
 void Flow::readConfig()
