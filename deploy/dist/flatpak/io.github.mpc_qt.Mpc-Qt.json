@@ -655,14 +655,14 @@
       ],
       "sources": [
         {
-          "type": "archive",
-          "url": "https://ffmpeg.org/releases/ffmpeg-7.0.tar.gz",
-          "sha256": "943a2a28044947c17a905c39075494b0da46ec0795224c2c61eff986518321eb",
+          "type": "git",
+          "url": "https://github.com/FFmpeg/FFmpeg.git",
+          "mirror-urls": "https://git.ffmpeg.org/ffmpeg.git",
+          "tag": "n7.1",
+          "commit": "b08d7969c550a804a59511c7b83f2dd8cc0499b8",
           "x-checker-data": {
-            "type": "anitya",
-            "project-id": 5405,
-            "stable-only": true,
-            "url-template": "https://ffmpeg.org/releases/ffmpeg-$version.tar.gz"
+            "type": "git",
+            "tag-pattern": "^n([\\d.]{3,7})$"
           }
         },
         {
