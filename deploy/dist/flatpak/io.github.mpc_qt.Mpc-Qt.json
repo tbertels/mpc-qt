@@ -418,6 +418,159 @@
       ]
     },
     {
+    "name": "x264",
+    "cleanup": [
+      "/include",
+      "/lib/pkgconfig",
+      "/share/man"
+    ],
+    "config-opts": [
+      "--disable-cli",
+      "--enable-shared"
+    ],
+    "sources": [
+      {
+        "type": "git",
+        "url": "https://github.com/jpsdr/x264",
+        "mirror-urls": [
+          "https://code.videolan.org/videolan/x264.git"
+        ],
+        "commit": "7ed753b10a61d0be95f683289dfb925b800b0676",
+        "x-checker-data": {
+          "type": "json",
+          "url": "https://code.videolan.org/api/v4/projects/536/repository/commits",
+          "commit-query": "first( .[].id )",
+          "version-query": "first( .[].id )",
+          "timestamp-query": "first( .[].committed_date )"
+        }
+      }
+    ]
+  },
+      {
+      "name": "x265",
+      "buildsystem": "cmake",
+      "subdir": "source",
+      "config-opts": [
+        "-DCMAKE_BUILD_TYPE=Release",
+        "-DBUILD_STATIC=0"
+      ],
+      "cleanup": [
+        "/include",
+        "/lib/pkgconfig",
+        "/share/man"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://bitbucket.org/multicoreware/x265_git.git",
+          "tag": "4.0",
+          "commit": "6318f223684118a2c71f67f3f4633a9e35046b00",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^([\\d.]+)$"
+          }
+        }
+      ]
+    },
+    {
+      "name": "ffmpeg",
+      "cleanup": [
+        "/share/ffmpeg/examples"
+      ],
+      "config-opts": [
+        "--disable-debug",
+        "--disable-doc",
+        "--disable-programs",
+        "--disable-static",
+        "--disable-encoders",
+        "--disable-muxers",
+        "--enable-shared",
+        "--enable-gnutls",
+        "--enable-gpl",
+        "--enable-version3",
+        "--enable-encoder=png,libwebp,libjxl",
+        "--enable-libv4l2",
+        "--enable-libdav1d",
+        "--enable-libfontconfig",
+        "--enable-libfreetype",
+        "--enable-libopus",
+        "--enable-libmysofa",
+        "--enable-librsvg",
+        "--enable-libvpx",
+        "--enable-libmp3lame",
+        "--enable-libx264",
+        "--enable-libx265",
+        "--enable-libwebp",
+        "--enable-libjxl",
+        "--enable-libxml2"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/FFmpeg/FFmpeg.git",
+          "mirror-urls": "https://git.ffmpeg.org/ffmpeg.git",
+          "tag": "n7.1",
+          "commit": "b08d7969c550a804a59511c7b83f2dd8cc0499b8",
+          "x-checker-data": {
+            "type": "git",
+            "tag-pattern": "^n([\\d.]{3,7})$"
+          }
+        },
+        {
+          "name": "libjxl",
+          "buildsystem": "cmake-ninja",
+          "config-opts": [
+            "-DJPEGXL_ENABLE_JPEGLI=OFF",
+            "-DBUILD_TESTING=OFF",
+            "-DJPEGXL_ENABLE_BENCHMARK=OFF",
+            "-DJPEGXL_ENABLE_COVERAGE=OFF",
+            "-DJPEGXL_ENABLE_EXAMPLES=OFF",
+            "-DJPEGXL_ENABLE_FUZZERS=OFF",
+            "-DJPEGXL_ENABLE_JNI=OFF",
+            "-DJPEGXL_ENABLE_SJPEG=OFF",
+            "-DJPEGXL_ENABLE_SKCMS=OFF",
+            "-DJPEGXL_ENABLE_TOOLS=OFF",
+            "-DJPEGXL_ENABLE_VIEWERS=OFF"
+          ],
+          "sources": [
+            {
+              "type": "archive",
+              "url": "https://github.com/libjxl/libjxl/archive/refs/tags/v0.10.2.tar.gz",
+              "sha256": "95e807f63143856dc4d161c071cca01115d2c6405b3d3209854ac6989dc6bb91",
+              "x-checker-data": {
+                "type": "anitya",
+                "project-id": 232764,
+                "stable-only": true,
+                "url-template": "https://github.com/libjxl/libjxl/archive/refs/tags/v$version.tar.gz"
+              }
+            },
+            {
+              "name": "highway",
+              "buildsystem": "cmake-ninja",
+              "config-opts": [
+                "-DCMAKE_BUILD_TYPE=RelWithDebInfo",
+                "-DBUILD_TESTING=OFF",
+                "-DBUILD_SHARED_LIBS=ON"
+              ],
+              "sources": [
+                {
+                  "type": "archive",
+                  "url": "https://github.com/google/highway/archive/refs/tags/1.1.0.tar.gz",
+                  "sha256": "354a8b4539b588e70b98ec70844273e3f2741302c4c377bcc4e81b3d1866f7c9",
+                  "x-checker-data": {
+                    "type": "anitya",
+                    "project-id": 205809,
+                    "stable-only": true,
+                    "url-template": "https://github.com/google/highway/archive/refs/tags/$version.tar.gz"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "libmpv",
       "buildsystem": "meson",
       "config-opts": [
