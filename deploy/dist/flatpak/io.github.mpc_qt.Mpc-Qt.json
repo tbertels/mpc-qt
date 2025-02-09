@@ -1,16 +1,9 @@
 {
   "app-id": "io.github.mpc_qt.Mpc-Qt",
   "app-version": "24.12",
-  "runtime": "org.kde.Platform",
-  "runtime-version": "6.8",
-  "add-extensions": {
-    "org.freedesktop.Platform.ffmpeg-full": {
-      "version": "24.08",
-      "autodownload": true,
-      "autodelete": false
-    }
-  },
-  "sdk": "org.kde.Sdk",
+  "runtime": "org.freedesktop.Platform",
+  "runtime-version": "24.08",
+  "sdk": "org.freedesktop.Sdk",
   "metadata": {
     "appdata": "io.github.mpc_qt.Mpc-Qt.appdata.xml"
   },
