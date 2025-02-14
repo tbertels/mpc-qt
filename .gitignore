@@ -51,6 +51,13 @@ mpc-qt
 /object_script.*.Release
 /resources/translations/
 
+# CMake
+/CMakeFiles/
+CMakeCache.txt
+*.cmake
+/mpc-qt_autogen/
+/.qt/
+
 # make release scripts
 /mpc-qt-*/
 *.zip 
