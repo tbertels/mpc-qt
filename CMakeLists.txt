@@ -1,18 +1,19 @@
-cmake_minimum_required(VERSION 3.16)
-project(mpc-qt LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+project(mpc-qt CXX)
+#set(CMAKE_VERBOSE_MAKEFILE ON)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED ON)
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall" )
+SET(CMAKE_CXX_FLAGS "-Wall -O2")
+
+SET(CMAKE_EXPORT_COMPILE_COMMANDS ON) # For clangd
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
-set(CMAKE_AUTOUIC ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-find_package(QT NAMES Qt6 REQUIRED COMPONENTS Core)
 find_package(Qt6 REQUIRED COMPONENTS Gui Network OpenGLWidgets Svg Widgets)
-find_package(Qt6 REQUIRED COMPONENTS LinguistTools) # FIXME no translations
+find_package(Qt6 REQUIRED COMPONENTS LinguistTools)
 find_package(PkgConfig REQUIRED)
 
 # Allow overriding version from the command line
@@ -79,7 +80,6 @@ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Release")
 endif()
 
 
-
 set(QM_FILES_RESOURCE_PREFIX "/i18n/")
 set(TS_FILES
     translations/mpc-qt_ca.ts
@@ -96,11 +96,11 @@ set(TS_FILES
 )
 
 # Generate QM files
+set_source_files_properties(${TS_FILES} PROPERTIES OUTPUT_LOCATION ".qm")
 qt_add_translations(mpc-qt
     TS_FILES ${TS_FILES}
     RESOURCE_PREFIX ${QM_FILES_RESOURCE_PREFIX}
 )
-
 
 qt_standard_project_setup()
 
@@ -139,7 +139,6 @@ qt_add_executable(mpc-qt WIN32 MACOSX_BUNDLE
 )
 
 target_link_libraries(mpc-qt PRIVATE
-    Qt::Core
     Qt::Gui
     Qt::Network
     Qt::OpenGLWidgets
@@ -154,20 +153,16 @@ if(UNIX)
         platform/screensaver_unix.cpp platform/screensaver_unix.h
     )
 
-    target_compile_definitions(mpc-qt PRIVATE
-        MPCQT_PREFIX="/usr/local" # FIXME
-    )
-
     target_link_libraries(mpc-qt PRIVATE
         Qt::DBus
     )
 endif()
 
-if(((NOT (NOT MPCQT_VERSION_ISEMPTY)) AND (EXISTS .git)) AND (NOT VERSTR_BLD___equals___0))
-    target_compile_definitions(mpc-qt PRIVATE
-        MPCQT_DEVELOPMENT
-    )
-endif()
+# if(((NOT (NOT MPCQT_VERSION_ISEMPTY)) AND (EXISTS .git)) AND (NOT VERSTR_BLD___equals___0))
+#     target_compile_definitions(mpc-qt PRIVATE
+#         MPCQT_DEVELOPMENT
+#     )
+# endif()
 
 if(WIN32)
     target_sources(mpc-qt PUBLIC
@@ -180,22 +175,22 @@ if(WIN32)
     )
 endif()
 
-if(WIN32 AND NOT ENABLE_LOCAL_MPV_ISEMPTY)
-    target_include_directories(mpc-qt PRIVATE
-        mpv-dev/include
-    )
+# if(WIN32 AND NOT ENABLE_LOCAL_MPV_ISEMPTY)
+#     target_include_directories(mpc-qt PRIVATE
+#         mpv-dev/include
+#     )
 
-    target_link_libraries(mpc-qt PRIVATE
-        # Remove: L${CMAKE_CURRENT_SOURCE_DIR}/mpv-dev/lib/
-        libmpv
-    )
-endif()
+#     target_link_libraries(mpc-qt PRIVATE
+#         # Remove: L${CMAKE_CURRENT_SOURCE_DIR}/mpv-dev/lib/
+#         libmpv
+#     )
+# endif()
 
 
 # Unix-specific settings
 if(UNIX)
-    find_package(Qt6 REQUIRED COMPONENTS DBus)
-    target_link_libraries(mpc-qt PRIVATE Qt6::DBus)# FIXME duplicate
+    # find_package(Qt6 REQUIRED COMPONENTS DBus)
+    # target_link_libraries(mpc-qt PRIVATE Qt6::DBus)# FIXME duplicate
 
     # Use pkg-config to find MPV
     pkg_check_modules(MPV REQUIRED mpv)
@@ -223,7 +218,6 @@ if(WIN32)
 endif()
 
 
-# Resources:
 set(res_resource_files
     "http/browser.html"
     "http/index.html"
@@ -290,25 +284,16 @@ qt_add_resources(mpc-qt "res"
     FILES
         ${res_resource_files}
 )
-# set(qmake_immediate_resource_files
-#     "qm_res"
-# )
 
-# qt_add_resources(mpc-qt "qmake_immediate"
-#     PREFIX
-#         "/"
-#     FILES
-#         ${qmake_immediate_resource_files}
-# )
+if(UNIX)
+    if(NOT DEFINED PREFIX)
+        set(PREFIX "/usr/local")
+    endif()
 
-install(TARGETS mpc-qt
-    BUNDLE DESTINATION .
-    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
-)
+    target_compile_definitions(mpc-qt PRIVATE MPCQT_PREFIX="${PREFIX}")
 
-qt_generate_deploy_app_script(
-    TARGET mpc-qt
-    OUTPUT_SCRIPT deploy_script
-    NO_UNSUPPORTED_PLATFORM_ERROR
-)
-install(SCRIPT ${deploy_script})
+    install(TARGETS mpc-qt DESTINATION ${PREFIX}/bin)
+    install(FILES DOCS/ipc.md DESTINATION ${PREFIX}/share/doc/mpc-qt)
+    install(FILES io.github.mpc-qt.mpc-qt.desktop DESTINATION ${PREFIX}/share/applications)
+    install(FILES images/icon/mpc-qt.svg DESTINATION ${PREFIX}/share/icons/hicolor/scalable/apps)
+endif()
