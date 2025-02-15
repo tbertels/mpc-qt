@@ -71,12 +71,16 @@ jobs:
     name: AppImage
     runs-on: ubuntu-latest
     needs: build
+    container:
+      image: "registry.opensuse.org/opensuse/tumbleweed:latest"
 
     steps:
     - name: Install packages
-      run: |
-        sudo apt-get update
-        sudo apt-get -y install libfuse2 libqt6svg6-dev libqt6openglwidgets6 qmake6
+      run: zypper install -y libfuse2 wget qt6-base-devel
+          #  zypper install -y libfuse2 libQt6Svg6-devel libQt6OpenGLWidgets6 qt6-base-devel
+          #  zypper install -y gcc-c++ libQt6Core6 qt6-base-devel qt6-svg-devel libQt6Svg6 libglvnd-devel mpv-devel
+        # sudo apt-get update
+        # sudo apt-get -y install libfuse2 libqt6svg6-dev libqt6openglwidgets6 qmake6
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Download mpc-qt AppDir
@@ -84,34 +88,32 @@ jobs:
       with:
         name: AppDir
         path: AppDir
-    - name: ls -R -l /usr/local
-      run:  ls -R -l /usr/local
-    - name: Add /usr/local to PKG_CONFIG_PATH
-      run: echo "PKG_CONFIG_PATH=/usr/local/lib:$PKG_CONFIG_PATH" >> $GITHUB_ENV
-    # - name: Download mpc-qt AppDir
-    #   uses: actions/download-artifact@v4
-    #   with:
-    #     name: AppDir
-    #     path: AppDir
     # - uses: geekyeggo/delete-artifact@v5
     #   with:
     #       name: AppDir
+    - name: ls -R -l
+      run:  ls -R -l
+    # - name: echo $PATH
+    #   run:  echo $PATH
+    # - name: ls -R -l
+    #   run:  ls -R -l
+    - name: Move from AppDir/usr/local/ AppDir/usr/
+      run:  mv AppDir/usr/local/* AppDir/usr/
+    - name: Make sure mpc-qt is executable
+      run:  chmod +x AppDir/usr/bin/mpc-qt
+    - name: Remove AppDir/usr/local
+      run:  rmdir AppDir/usr/local
     - name: Install LinuxDeploy
       uses: miurahr/install-linuxdeploy-action@v1
       with:
         plugins: qt appimage
-    - name: ls -R -l
-      run:  ls -R -l
-    - name: Move from AppDir/usr/local/ AppDir/usr/
-      run:  mv AppDir/usr/local/* AppDir/usr/
-    - name: Make sure mpc-qt is executable
-      run:  sudo chmod +x AppDir/usr/bin/mpc-qt
-    - name: Remove AppDir/usr/local
-      run:  rmdir AppDir/usr/local
+    - name: Fix PATH
+      run: echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> $GITHUB_ENV
+      shell: "/bin/sh"
     - name: Build AppImage
       run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun ./AppImage/AppRun --plugin qt --output appimage
-    - name: ls -R -l
-      run:  ls -R -l
+    # - name: ls -R -l
+    #   run:  ls -R -l
     - name: Rename AppImage
       run:  mv *.AppImage mpc-qt-x86_64.AppImage
     - name: Upload AppImage
