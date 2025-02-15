@@ -5,63 +5,73 @@ on:
   pull_request:
 
 jobs:
-  # build:
-  #   name: Build
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - name: Install packages
-  #     run: |
-  #       sudo apt-get update
-  #       sudo apt-get -y install build-essential qmake6 qt6-base-dev qt6-l10n-tools libqt6svg6-dev libgl-dev libmpv-dev
-  #   - name: Checkout repository
-  #     uses: actions/checkout@v4
-  #   - name: qmake
-  #     run: qmake6 MPCQT_VERSION=GithubAction mpc-qt.pro
-  #   - name: make
-  #     run: make
-  #   - name: make install
-  #     run: make install INSTALL_ROOT=AppDir
-  #   - name: ls -R -l AppDir
-  #     run:  ls -R -l AppDir
-  #   - name: Upload mpc-qt AppDir
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: AppDir
-  #       path: AppDir
-
-  build_mpv:
-    name: Build libmpv
+  build:
+    name: Build with Tumbleweed
     runs-on: ubuntu-latest
+    container:
+      image: "registry.opensuse.org/home/mia/images/images/mpv-ci:stable-deps"
 
     steps:
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y ccache g++-mingw-w64 gcc-multilib meson nasm ninja-build pkg-config ${{ matrix.wine }}    
+    - name: Install packages
+      run: zypper install pkg-config qmake6 qt6-base-dev qt6-l10n-tools libqt6svg6-dev libgl-dev libmpv-dev
+        # sudo apt-get update
+        # sudo apt-get -y install build-essential qmake6 qt6-base-dev qt6-l10n-tools libqt6svg6-dev libgl-dev libmpv-dev
     - name: Checkout repository
       uses: actions/checkout@v4
-      with:
-        repository: mpv-player/mpv
-        ref: v0.39.0      
-    - name: Configure
-      run: meson setup build --prefix=/usr/local
-    - name: Build
-      run: meson compile -C build
-    - name: Install
-      run: install -C build
-    - name: ls -R -l /usr/local
-      run:  ls -R -l /usr/local
-    - name: Upload mpv
+    - name: qmake
+      run: qmake6 MPCQT_VERSION=GithubAction mpc-qt.pro
+    - name: make
+      run: make
+    - name: make install
+      run: make install INSTALL_ROOT=AppDir
+    - name: ls -R -l AppDir
+      run:  ls -R -l AppDir
+    - name: Upload mpc-qt AppDir
       uses: actions/upload-artifact@v4
       with:
-        name: mpv
-        path: /usr/local
+        name: AppDir
+        path: AppDir
+
+  # build_mpv:
+  #   name: Build libmpv
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: "registry.opensuse.org/home/mia/images/images/mpv-ci:stable-deps"
+  #     # env:
+  #     #   CC: "${{ matrix.config.cc }}"
+  #     #   CXX: "${{ matrix.config.cxx }}"
+  #   steps:
+  #   - name: Install dependencies
+  #     run: |
+  #       sudo apt-get update
+  #       zypper install -y ccache g++-mingw-w64 gcc-multilib meson nasm ninja-build pkg-config ${{ matrix.wine }}    
+  #   # - name: Install dependencies
+  #   #   run: |
+  #   #     sudo apt-get update
+  #   #     sudo apt-get install -y ccache g++-mingw-w64 gcc-multilib meson nasm ninja-build pkg-config ${{ matrix.wine }}    
+  #   - name: Checkout repository
+  #     uses: actions/checkout@v4
+  #     with:
+  #       repository: mpv-player/mpv
+  #       ref: v0.39.0      
+  #   - name: Configure
+  #     run: meson setup build --prefix=/usr/local
+  #   - name: Build
+  #     run: meson compile -C build
+  #   - name: Install
+  #     run: install -C build
+  #   - name: ls -R -l /usr/local
+  #     run:  ls -R -l /usr/local
+  #   - name: Upload mpv
+  #     uses: actions/upload-artifact@v4
+  #     with:
+  #       name: mpv
+  #       path: /usr/local
 
   craft:
     name: AppImage
     runs-on: ubuntu-latest
-    needs: build_mpv
+    needs: build
 
     steps:
     - name: Install packages
