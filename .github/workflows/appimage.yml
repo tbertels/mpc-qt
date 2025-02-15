@@ -9,11 +9,10 @@ jobs:
     name: Build with Tumbleweed
     runs-on: ubuntu-latest
     container:
-      image: "registry.opensuse.org/home/mia/images/images/mpv-ci:stable-deps"
-
+      image: "registry.opensuse.org/opensuse/tumbleweed:latest"
     steps:
     - name: Install packages
-      run: zypper install pkg-config qmake6 qt6-base-dev qt6-l10n-tools libqt6svg6-dev libgl-dev libmpv-dev
+      run: zypper install -y gcc-c++ libQt6Core6 qt6-base-devel qt6-tools-linguist qt6-svg-devel libQt6Svg6 libglvnd-devel mpv-devel
         # sudo apt-get update
         # sudo apt-get -y install build-essential qmake6 qt6-base-dev qt6-l10n-tools libqt6svg6-dev libgl-dev libmpv-dev
     - name: Checkout repository
@@ -83,8 +82,8 @@ jobs:
     - name: Download mpc-qt AppDir
       uses: actions/download-artifact@v4
       with:
-        name: mpv
-        path: /usr/local
+        name: AppDir
+        path: AppDir
     - name: ls -R -l /usr/local
       run:  ls -R -l /usr/local
     - name: Add /usr/local to PKG_CONFIG_PATH
