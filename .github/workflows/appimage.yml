@@ -44,38 +44,49 @@ jobs:
       with:
         repository: mpv-player/mpv
         ref: v0.39.0      
-    - name: make
-      run: make
-    - name: make install
-      run: make install INSTALL_ROOT=AppDir
-    - name: ls -R -l AppDir
-      run:  ls -R -l AppDir
-    - name: Upload mpc-qt AppDir
+    - name: Configure
+      run: meson setup build --prefix=/usr/local
+    - name: Build
+      run: meson compile -C build
+    - name: Install
+      run: install -C build
+    - name: ls -R -l /usr/local
+      run:  ls -R -l /usr/local
+    - name: Upload mpv
       uses: actions/upload-artifact@v4
       with:
-        name: AppDir
-        path: AppDir        
+        name: mpv
+        path: /usr/local
 
   craft:
     name: AppImage
     runs-on: ubuntu-latest
-    needs: build
+    needs: build_mpv
 
     steps:
     - name: Install packages
       run: |
         sudo apt-get update
-        sudo apt-get -y install libfuse2 libqt6svg6-dev libqt6openglwidgets6 libmpv-dev qmake6
+        sudo apt-get -y install libfuse2 libqt6svg6-dev libqt6openglwidgets6 qmake6
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Download mpc-qt AppDir
       uses: actions/download-artifact@v4
       with:
-        name: AppDir
-        path: AppDir
-    - uses: geekyeggo/delete-artifact@v5
-      with:
-          name: AppDir
+        name: mpv
+        path: /usr/local
+    - name: ls -R -l /usr/local
+      run:  ls -R -l /usr/local
+    - name: Add /usr/local to PKG_CONFIG_PATH
+      run: echo "PKG_CONFIG_PATH=/usr/local/lib:$PKG_CONFIG_PATH" >> $GITHUB_ENV
+    # - name: Download mpc-qt AppDir
+    #   uses: actions/download-artifact@v4
+    #   with:
+    #     name: AppDir
+    #     path: AppDir
+    # - uses: geekyeggo/delete-artifact@v5
+    #   with:
+    #       name: AppDir
     - name: Install LinuxDeploy
       uses: miurahr/install-linuxdeploy-action@v1
       with:
