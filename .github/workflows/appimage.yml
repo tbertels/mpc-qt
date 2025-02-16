@@ -11,6 +11,8 @@ jobs:
     container:
       image: "registry.opensuse.org/opensuse/tumbleweed:latest"
     steps:
+    - name: Check pwd
+      run: pwd
     - name: Install packages
       run: zypper install -y gcc-c++ libQt6Core6 qt6-base-devel qt6-tools-linguist qt6-svg-devel libQt6Svg6 libglvnd-devel mpv-devel
         # sudo apt-get update
@@ -76,7 +78,7 @@ jobs:
 
     steps:
     - name: Install packages
-      run: zypper install -y libfuse2 wget qt6-base-devel
+      run: zypper install -y fuse wget qt6-base-devel
           #  zypper install -y libfuse2 libQt6Svg6-devel libQt6OpenGLWidgets6 qt6-base-devel
           #  zypper install -y gcc-c++ libQt6Core6 qt6-base-devel qt6-svg-devel libQt6Svg6 libglvnd-devel mpv-devel
         # sudo apt-get update
@@ -103,15 +105,28 @@ jobs:
       run:  chmod +x AppDir/usr/bin/mpc-qt
     - name: Remove AppDir/usr/local
       run:  rmdir AppDir/usr/local
-    - name: Install LinuxDeploy
-      uses: miurahr/install-linuxdeploy-action@v1
+    - name: Install linuxdeploy
+      uses: pcolby/install-linuxdeploy@v1
       with:
-        plugins: qt appimage
-    - name: Fix PATH
-      run: echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> $GITHUB_ENV
-      shell: "/bin/sh"
+        arch: x86_64
+        dir: linuxdeploy
+        install-deps: false
+        plugins: appimage qt
+        set-env: false
+        version: continuous
+    - name: Check pwd
+      run: pwd
+    - name: ls -R -l
+      run:  ls -R -l
+    # - name: Install LinuxDeploy
+    #   uses: miurahr/install-linuxdeploy-action@v1
+    #   with:
+    #     plugins: qt appimage
+    # - name: Fix PATH
+    #   run: echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> $GITHUB_ENV
+    #   shell: "/bin/sh"
     - name: Build AppImage
-      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun ./AppImage/AppRun --plugin qt --output appimage
+      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy/linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun ./AppImage/AppRun --plugin qt --output appimage
     # - name: ls -R -l
     #   run:  ls -R -l
     - name: Rename AppImage
