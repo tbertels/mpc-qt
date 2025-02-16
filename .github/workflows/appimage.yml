@@ -78,7 +78,7 @@ jobs:
 
     steps:
     - name: Install packages
-      run: zypper install -y fuse wget qt6-base-devel
+      run: zypper install -y libQt6Core6 qt6-base-devel qt6-tools-linguist qt6-svg-devel libQt6Svg6 libglvnd-devel mpv-devel
           #  zypper install -y libfuse2 libQt6Svg6-devel libQt6OpenGLWidgets6 qt6-base-devel
           #  zypper install -y gcc-c++ libQt6Core6 qt6-base-devel qt6-svg-devel libQt6Svg6 libglvnd-devel mpv-devel
         # sudo apt-get update
@@ -114,8 +114,13 @@ jobs:
         plugins: appimage qt
         set-env: false
         version: continuous
+    # - name: Add linuxdeploy to PATH
+    #   run: echo "/__w/mpc-qt/mpc-qt/linuxdeploy" >> $GITHUB_PATH
+    #   shell: bash
     - name: Check pwd
       run: pwd
+    - name: Check PATH
+      run: echo $PATH
     - name: ls -R -l
       run:  ls -R -l
     # - name: Install LinuxDeploy
@@ -125,8 +130,22 @@ jobs:
     # - name: Fix PATH
     #   run: echo "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin" >> $GITHUB_ENV
     #   shell: "/bin/sh"
+    # - name: Extract linuxdeploy AppImage files
+    #   run:  |
+    #         ./linuxdeploy/linuxdeploy-x86_64.AppImage --appimage-extract
+    #         ./linuxdeploy/linuxdeploy-plugin-qt-x86_64.AppImage --appimage-extract
+    #         ./linuxdeploy/linuxdeploy-plugin-appimage-x86_64.AppImage --appimage-extract
+    # - name: ls -R -l
+    #   run:  ls -R -l
+    # - name: Move linuxdeploy files from squashfs-root to parent directory
+    #   run: |
+    #     shopt -s dotglob
+    #     mv squashfs-root/* .
+    #   shell: bash
+    - name: ls -R -l
+      run:  ls -R -l
     - name: Build AppImage
-      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy/linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun ./AppImage/AppRun --plugin qt --output appimage
+      run: APPIMAGE_EXTRACT_AND_RUN=1 EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy/linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun ./AppImage/AppRun --plugin qt --output appimage
     # - name: ls -R -l
     #   run:  ls -R -l
     - name: Rename AppImage
