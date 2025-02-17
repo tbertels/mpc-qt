@@ -6,117 +6,102 @@ on:
 
 jobs:
   build:
-    name: Build with Tumbleweed
-    runs-on: ubuntu-latest
-    container:
-      image: "registry.opensuse.org/opensuse/tumbleweed:latest"
+    name: Build with PPA
+    runs-on: ubuntu-20.04
     steps:
     - name: Check pwd
       run: pwd
     - name: Install packages
-      run: zypper install -y gcc-c++ libQt6Core6 qt6-base-devel qt6-tools-linguist qt6-svg-devel libQt6Svg6 libglvnd-devel mpv-devel
-        # sudo apt-get update
-        # sudo apt-get -y install build-essential qmake6 qt6-base-dev qt6-l10n-tools libqt6svg6-dev libgl-dev libmpv-dev
+      run: |
+        sudo apt update
+        sudo apt install build-essential
+        sudo add-apt-repository ppa:savoury1/build-tools
+        sudo add-apt-repository ppa:savoury1/qt-6-2
+        sudo add-apt-repository ppa:savoury1/llvm-defaults-13
+        sudo add-apt-repository ppa:savoury1/graphics
+        sudo add-apt-repository ppa:savoury1/display
+        sudo add-apt-repository ppa:savoury1/multimedia
+        sudo apt upgrade
+        sudo apt dist-upgrade
+        sudo apt install qmake6 qt6-base-dev qt6-l10n-tools libqt6svg6-dev
+        sudo apt install devscripts equivs git
     - name: Checkout repository
       uses: actions/checkout@v4
+    - name: Checkout mpv repository
+      uses: actions/checkout@v4
+      with:
+        repository: "mpv-player/mpv-build"
+        path: mpv-build
+    - name: pwd
+      run:  pwd
+    - name: ls -R -l ..
+      run:  ls -R -l ..
+    - name: Copy build options
+      run: |
+        cp .github/actions/data/build_options/* mpv-build/
+    - name: ls -R -l ..
+      run:  ls -R -l ..
+    # - name: Add libmpv-dev def to mpv package
+    #   run:  cat .github/actions/data/mpv_package/control.add >> mpv-build/debian/control
+    - name: Get mpv depencencies
+      run: |
+        cd mpv-build
+        sed -i '/libdisplay-info-dev/d' debian/control
+        ./update
+        cp debian/changelog.TEMPLATE debian/changelog
+        mk-build-deps -s sudo -i
+    - name: ls -R -l
+      run:  ls -R -l
+    - name: pwd
+      run:  pwd
+    - name: Build mpv package
+      run: |
+        cd mpv-build
+        export DEB_BUILD_OPTIONS=nostrip
+        dpkg-buildpackage -uc -us -b
+    - name: Install mpv package
+      run: |
+        mv mpv-build/*.deb ./
+        sudo dpkg -i *.deb
+    - name: ls -R -l /usr/include/
+      run:  ls -R -l /usr/include/
+    - name: Build mpc-qt
+      run: cd ..
+    - name: Use built libmpv
+      run: sed -i 's|unix:PKGCONFIG += mpv|unix:LIBS += -lmpv|' mpc-qt.pro
     - name: qmake
-      run: qmake6 MPCQT_VERSION=GithubAction mpc-qt.pro
+      run: qmake6 MPCQT_VERSION=GithubAction PREFIX=/usr mpc-qt.pro
     - name: make
       run: make
     - name: make install
       run: make install INSTALL_ROOT=AppDir
     - name: ls -R -l AppDir
       run:  ls -R -l AppDir
-    - name: Upload mpc-qt AppDir
-      uses: actions/upload-artifact@v4
-      with:
-        name: AppDir
-        path: AppDir
-
-  # build_mpv:
-  #   name: Build libmpv
-  #   runs-on: ubuntu-latest
-  #   container:
-  #     image: "registry.opensuse.org/home/mia/images/images/mpv-ci:stable-deps"
-  #     # env:
-  #     #   CC: "${{ matrix.config.cc }}"
-  #     #   CXX: "${{ matrix.config.cxx }}"
-  #   steps:
-  #   - name: Install dependencies
-  #     run: |
-  #       sudo apt-get update
-  #       zypper install -y ccache g++-mingw-w64 gcc-multilib meson nasm ninja-build pkg-config ${{ matrix.wine }}    
-  #   # - name: Install dependencies
-  #   #   run: |
-  #   #     sudo apt-get update
-  #   #     sudo apt-get install -y ccache g++-mingw-w64 gcc-multilib meson nasm ninja-build pkg-config ${{ matrix.wine }}    
-  #   - name: Checkout repository
-  #     uses: actions/checkout@v4
-  #     with:
-  #       repository: mpv-player/mpv
-  #       ref: v0.39.0      
-  #   - name: Configure
-  #     run: meson setup build --prefix=/usr/local
-  #   - name: Build
-  #     run: meson compile -C build
-  #   - name: Install
-  #     run: install -C build
-  #   - name: ls -R -l /usr/local
-  #     run:  ls -R -l /usr/local
-  #   - name: Upload mpv
-  #     uses: actions/upload-artifact@v4
-  #     with:
-  #       name: mpv
-  #       path: /usr/local
-
-  craft:
-    name: AppImage
-    runs-on: ubuntu-latest
-    needs: build
-    container:
-      image: "registry.opensuse.org/opensuse/tumbleweed:latest"
-
-    steps:
-    - name: Install packages
-      run: zypper install -y libQt6Core6 qt6-base-devel qt6-tools-linguist qt6-svg-devel libQt6Svg6 libglvnd-devel mpv-devel
-          #  zypper install -y libfuse2 libQt6Svg6-devel libQt6OpenGLWidgets6 qt6-base-devel
-          #  zypper install -y gcc-c++ libQt6Core6 qt6-base-devel qt6-svg-devel libQt6Svg6 libglvnd-devel mpv-devel
-        # sudo apt-get update
-        # sudo apt-get -y install libfuse2 libqt6svg6-dev libqt6openglwidgets6 qmake6
-    - name: Checkout repository
-      uses: actions/checkout@v4
-    - name: Download mpc-qt AppDir
-      uses: actions/download-artifact@v4
-      with:
-        name: AppDir
-        path: AppDir
-    # - uses: geekyeggo/delete-artifact@v5
+    # - name: Upload mpc-qt AppDir
+    #   uses: actions/upload-artifact@v4
     #   with:
-    #       name: AppDir
+    #     name: AppDir
+    #     path: AppDir
+
+    - name: Install packages
+      run: sudo apt install libfuse2 libqt6svg6-dev libqt6openglwidgets6 qmake6
     - name: ls -R -l
       run:  ls -R -l
-    # - name: echo $PATH
-    #   run:  echo $PATH
-    # - name: ls -R -l
-    #   run:  ls -R -l
-    - name: Move from AppDir/usr/local/ AppDir/usr/
-      run:  mv AppDir/usr/local/* AppDir/usr/
+    # - name: Move from AppDir/usr/local/ AppDir/usr/
+    #   run:  mv AppDir/usr/local/* AppDir/usr/
     - name: Make sure mpc-qt is executable
       run:  chmod +x AppDir/usr/bin/mpc-qt
-    - name: Remove AppDir/usr/local
-      run:  rmdir AppDir/usr/local
-    - name: Install linuxdeploy
+    # - name: Remove AppDir/usr/local
+    #   run:  rmdir AppDir/usr/local
+    - name: Download linuxdeploy
       uses: pcolby/install-linuxdeploy@v1
       with:
         arch: x86_64
         dir: linuxdeploy
         install-deps: false
-        plugins: appimage checkrt qt
-        set-env: false
-        version: continuous
-    # - name: Add linuxdeploy to PATH
-    #   run: echo "/__w/mpc-qt/mpc-qt/linuxdeploy" >> $GITHUB_PATH
-    #   shell: bash
+        plugins: qt
+        set-env: true
+        version: 1-alpha-20240109-1
     - name: Check pwd
       run: pwd
     - name: Check PATH
@@ -142,14 +127,8 @@ jobs:
     #     shopt -s dotglob
     #     mv squashfs-root/* .
     #   shell: bash
-    - name: ls -R -l
-      run:  ls -R -l
-    - name: Make sure checkrt is executable
-      run:  chmod +x linuxdeploy/linuxdeploy-plugin-checkrt.sh
-    - name: Check rt dependencies
-      run:  ./linuxdeploy/linuxdeploy-plugin-checkrt.sh --appdir="../AppDir"
     - name: Build AppImage
-      run: APPIMAGE_EXTRACT_AND_RUN=1 EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy/linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun ./AppImage/AppRun --plugin checkrt --plugin qt --output appimage
+      run: EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy/linuxdeploy-x86_64.AppImage --appdir AppDir -e bin/mpc-qt --custom-apprun ./AppImage/AppRun -i images/icon/mpc-qt.svg --plugin qt --output appimage
     # - name: ls -R -l
     #   run:  ls -R -l
     - name: Rename AppImage
