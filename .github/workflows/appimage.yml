@@ -111,7 +111,7 @@ jobs:
         arch: x86_64
         dir: linuxdeploy
         install-deps: false
-        plugins: appimage qt
+        plugins: appimage checkrt qt
         set-env: false
         version: continuous
     # - name: Add linuxdeploy to PATH
@@ -144,8 +144,12 @@ jobs:
     #   shell: bash
     - name: ls -R -l
       run:  ls -R -l
+    - name: Make sure checkrt is executable
+      run:  chmod +x linuxdeploy/linuxdeploy-plugin-checkrt.sh
+    - name: Check rt dependencies
+      run:  ./linuxdeploy/linuxdeploy-plugin-checkrt.sh --appdir="../AppDir"
     - name: Build AppImage
-      run: APPIMAGE_EXTRACT_AND_RUN=1 EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy/linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun ./AppImage/AppRun --plugin qt --output appimage
+      run: APPIMAGE_EXTRACT_AND_RUN=1 EXTRA_QT_PLUGINS="svg;" QMAKE=/usr/bin/qmake6 linuxdeploy/linuxdeploy-x86_64.AppImage --appdir AppDir --custom-apprun ./AppImage/AppRun --plugin checkrt --plugin qt --output appimage
     # - name: ls -R -l
     #   run:  ls -R -l
     - name: Rename AppImage
