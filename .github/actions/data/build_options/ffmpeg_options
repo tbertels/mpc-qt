@@ -5,4 +5,5 @@
 --enable-libvorbis
 --enable-libvpx
 --enable-libx264
+--enable-vaapi
 --disable-vulkan
