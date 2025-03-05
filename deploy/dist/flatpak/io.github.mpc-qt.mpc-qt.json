@@ -271,6 +271,39 @@
       ]
     },
     {
+        "name": "mpv",
+        "buildsystem": "meson",
+        "config-opts": [
+          "-Dbuild-date=false",
+          "-Dlibmpv=true",
+          "-Dmanpage-build=disabled",
+          "-Dcdda=enabled",
+          "-Ddvbin=enabled",
+          "-Ddvdnav=enabled",
+          "-Dlibarchive=enabled",
+          "-Dsdl2=enabled",
+          "-Dvulkan=disabled"
+        ],
+        "cleanup": [
+          "/bin",
+          "/include",
+          "/lib/pkgconfig",
+          "/share"
+        ],
+        "sources": [
+          {
+            "type": "git",
+            "url": "https://github.com/mpv-player/mpv.git",
+            "tag": "v0.39.0",
+            "commit": "a0fba7be57f3822d967b04f0f6b6d6341e7516e7",
+            "x-checker-data": {
+              "type": "git",
+              "tag-pattern": "^v([\\d.]+)$"
+            }
+          }
+        ]
+    },
+    {
         "name": "libv4l2",
         "buildsystem": "meson",
         "cleanup": [
@@ -601,39 +634,6 @@
           ]
         }
       ]
-    },
-    {
-        "name": "mpv",
-        "buildsystem": "meson",
-        "config-opts": [
-          "-Dbuild-date=false",
-          "-Dlibmpv=true",
-          "-Dmanpage-build=disabled",
-          "-Dcdda=enabled",
-          "-Ddvbin=enabled",
-          "-Ddvdnav=enabled",
-          "-Dlibarchive=enabled",
-          "-Dsdl2=enabled",
-          "-Dvulkan=disabled"
-        ],
-        "cleanup": [
-          "/bin",
-          "/include",
-          "/lib/pkgconfig",
-          "/share"
-        ],
-        "sources": [
-          {
-            "type": "git",
-            "url": "https://github.com/mpv-player/mpv.git",
-            "tag": "v0.39.0",
-            "commit": "a0fba7be57f3822d967b04f0f6b6d6341e7516e7",
-            "x-checker-data": {
-              "type": "git",
-              "tag-pattern": "^v([\\d.]+)$"
-            }
-          }
-        ]
     },
     {
       "name": "mpc-qt",
