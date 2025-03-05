@@ -304,6 +304,36 @@
       ]
     },
     {
+        "name": "libv4l2",
+        "buildsystem": "meson",
+        "cleanup": [
+          "/include",
+          "/lib/pkgconfig",
+          "/share/man"
+        ],
+        "config-opts": [
+          "-Ddoxygen-html=false",
+          "-Ddoxygen-doc=disabled",
+          "-Dbpf=disabled",
+          "-Dudevdir=/app/lib/udev"
+        ],
+        "sources": [
+          {
+            "type": "git",
+            "url": "https://git.linuxtv.org/v4l-utils.git",
+            "mirror-urls": [
+              "https://github.com/gjasny/v4l-utils.git"
+            ],
+            "tag": "v4l-utils-1.26.1",
+            "commit": "4aee01a027923cab1e40969f56f8ba58d3e6c0d1",
+            "x-checker-data": {
+              "type": "git",
+              "tag-pattern": "^v4l-utils-([\\d.]+)$"
+            }
+          }
+        ]
+    },  
+    {
       "name": "luajit",
       "no-autogen": true,
       "cleanup": [
