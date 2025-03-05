@@ -636,57 +636,6 @@
       ]
     },
     {
-      "name": "libmpv",
-      "buildsystem": "meson",
-      "config-opts": [
-        "-Dlibmpv=true",
-        "-Dlua=enabled",
-        "-Ddebug=false",
-        "-Dbuild-date=false",
-        "-Dtests=false",
-        "-Dalsa=disabled",
-        "-Djack=enabled",
-        "-Dpipewire=enabled",
-        "-Dpulse=enabled",
-        "-Ddrm=enabled",
-        "-Degl=enabled",
-        "-Dx11=enabled",
-        "-Dwayland=enabled",
-        "-Degl-drm=enabled",
-        "-Dgpl=true",
-        "-Dlibbluray=enabled",
-        "-Dcdda=enabled",
-        "-Ddvbin=enabled",
-        "-Ddvdnav=enabled",
-        "-Dlibarchive=enabled",
-        "-Dcuda-hwaccel=enabled",
-        "-Dvdpau=enabled",
-        "-Dvaapi=enabled",
-        "-Dvulkan=enabled",
-        "-Duchardet=enabled",
-        "-Dmanpage-build=disabled"
-      ],
-      "cleanup": ["/lib/pkgconfig", "/share", "/include"],
-      "dependencies": [
-        "ffmpeg",
-        "libplacebo",
-        "libass",
-        "luajit",
-        "uchardet",
-        "libdvdnav",
-        "libdvdread",
-        "zimg",
-        "nv-codec-headers"
-      ],
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://github.com/mpv-player/mpv/archive/refs/tags/v0.39.0.tar.gz",
-          "sha256": "2ca92437affb62c2b559b4419ea4785c70d023590500e8a52e95ea3ab4554683"
-        }
-      ]
-    },
-    {
       "name": "mpc-qt",
       "buildsystem": "qmake",
       "dependencies": [
