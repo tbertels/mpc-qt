@@ -1,11 +1,11 @@
 {
-  "app-id": "io.github.mpc_qt.Mpc-Qt",
+  "app-id": "io.github.mpc-qt.mpc-qt",
   "app-version": "24.12",
   "runtime": "org.kde.Platform",
   "runtime-version": "6.8",
   "sdk": "org.kde.Sdk",
   "metadata": {
-    "appdata": "io.github.mpc_qt.Mpc-Qt.appdata.xml"
+    "appdata": "io.github.mpc-qt.mpc-qt.appdata.xml"
   },
   "command": "mpc-qt",
   "rename-icon": "mpc-qt",
@@ -21,7 +21,7 @@
     "--filesystem=home",
     "--filesystem=xdg-run/pipewire-0:ro",
     "--talk-name=org.freedesktop.ScreenSaver",
-    "--own-name=org.mpris.MediaPlayer2.io.github.mpc_qt.Mpc-Qt",
+    "--own-name=org.mpris.MediaPlayer2.io.github.mpc-qt.mpc-qt",
     "--env=LC_NUMERIC=C",
     "--env=XCURSOR_PATH=/run/host/user-share/icons:/run/host/share/icons"
   ],

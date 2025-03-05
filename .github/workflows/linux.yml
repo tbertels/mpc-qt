@@ -53,7 +53,7 @@ jobs:
         name: "Build"
         with:
           bundle: mpc-qt-${{env.MPC-QT_PACKAGE_VERSION}}-linux-x86_64.flatpak
-          manifest-path: deploy/dist/flatpak/io.github.mpc_qt.Mpc-Qt.json
+          manifest-path: deploy/dist/flatpak/io.github.mpc-qt.mpc-qt.json
           cache-key: flatpak-builder-${{ github.sha }}
           upload-artifact: false
 
