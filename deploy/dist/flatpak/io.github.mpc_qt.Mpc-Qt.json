@@ -639,7 +639,7 @@
       "name": "mpc-qt",
       "buildsystem": "qmake",
       "dependencies": [
-        "libmpv",
+        "mpv",
         "yt-dlp"
       ],
       "build-options": {
