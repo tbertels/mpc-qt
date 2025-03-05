@@ -9,7 +9,7 @@
   },
   "command": "mpc-qt",
   "rename-icon": "mpc-qt",
-  "rename-desktop-file": "mpc-qt.desktop",
+  "rename-desktop-file": "io.github.mpc-qt.mpc-qt.desktop",
   "copy-icon": true,
   "finish-args": [
     "--share=ipc",
