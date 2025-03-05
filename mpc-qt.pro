@@ -110,7 +110,7 @@ unix {
     docs.files = DOCS/ipc.md
     docs.path = $$PREFIX/share/doc/mpc-qt/
 
-    shortcut.files = io.github.mpc-qt.mpc-qt.desktop
+    shortcut.files = io.github.mpc_qt.mpc-qt.desktop
     shortcut.path = $$PREFIX/share/applications/
 
     logo.files = images/icon/mpc-qt.svg
@@ -227,6 +227,6 @@ OTHER_FILES += \
 
 DISTFILES += \
     DOCS/ipc.md \
-    io.github.mpc-qt.mpc-qt.desktop
+    io.github.mpc_qt.mpc-qt.desktop
 
 
