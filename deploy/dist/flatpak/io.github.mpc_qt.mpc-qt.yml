@@ -5,6 +5,11 @@ sdk: org.kde.Sdk
 command: mpc-qt
 rename-icon: mpc-qt
 copy-icon: true
+add-extensions:
+  org.freedesktop.Platform.ffmpeg-full:
+    version: '23.08'
+    directory: lib/ffmpeg
+    add-ld-path: .
 finish-args:
   - --share=ipc
   - --share=network
@@ -184,66 +189,6 @@ modules:
                   project-id: 223796
                   stable-only: true
                   url-template: https://github.com/FFmpeg/nv-codec-headers/archive/refs/tags/n$version.tar.gz
-
-          - name: ffmpeg
-            cleanup:
-              - /share/ffmpeg/examples
-            config-opts:
-              - --disable-debug
-              - --disable-doc
-              - --disable-programs
-              - --disable-static
-              - --disable-encoders
-              - --disable-muxers
-              - --enable-shared
-              - --enable-gnutls
-              - --enable-gpl
-              - --enable-version3
-              - --enable-encoder=png,libwebp,libjxl
-              - --enable-libv4l2
-              - --enable-libdav1d
-              - --enable-libfontconfig
-              - --enable-libfreetype
-              - --enable-libopus
-              - --enable-librsvg
-              - --enable-libvpx
-              - --enable-libmp3lame
-              - --enable-libwebp
-              - --enable-libjxl
-              - --enable-libxml2
-              - --enable-vulkan
-#             - --enable-libx264 (needed for encoding)
-            sources:
-              - type: archive
-                url: https://ffmpeg.org/releases/ffmpeg-7.1.tar.gz
-                sha256: 42a7dc0d1583885d1b8f6559fa7ce28f97acafea6803de6a8f73e3ba229348bd
-                x-checker-data:
-                  type: anitya
-                  project-id: 5405
-                  stable-only: true
-                  url-template: https://ffmpeg.org/releases/ffmpeg-$version.tar.gz
-            modules:
-              - name: libjxl
-                buildsystem: cmake-ninja
-                config-opts:
-                  - -DCMAKE_BUILD_TYPE=Release
-                  - -DBUILD_TESTING=OFF
-                sources:
-                  - type: git
-                    url: https://github.com/libjxl/libjxl.git
-                    tag: v0.11.1
-                    commit: 794a5dcf0d54f9f0b20d288a12e87afb91d20dfc
-                    disable-shallow-clone: true
-                    x-checker-data:
-                      type: git
-                      tag-pattern: ^v([\d.]+)$
-
-              - name: vulkan-headers
-                buildsystem: cmake-ninja
-                sources:
-                  - type: archive
-                    url: https://github.com/KhronosGroup/Vulkan-Headers/archive/v1.3.286.tar.gz
-                    sha256: a82a6982efe5e603e23505ca19b469e8f3d876fc677c46b7bfb6177f517bf8fe
 
           - name: libass
             config-opts:
