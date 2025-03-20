@@ -12,13 +12,11 @@ finish-args:
   - --socket=wayland
   - --socket=pulseaudio
   - --device=dri
-  - --filesystem=xdg-run/gamescope-0:rw
+  - --filesystem=xdg-run/gamescope-0:ro
   - --filesystem=xdg-run/pipewire-0:ro
   - --filesystem=xdg-pictures
   - --talk-name=org.freedesktop.ScreenSaver
-  - --talk-name=org.freedesktop.FileManager1
   - --own-name=org.mpris.MediaPlayer2.MpcQt
-  - --system-talk-name=org.freedesktop.UDisks2
 cleanup:
   - '*.a'
   - '*.la'
