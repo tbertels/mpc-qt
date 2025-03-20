@@ -41,6 +41,8 @@ cleanup:
   - /lib/cmake
   - /lib/pkgconfig
   - /share/man
+cleanup-commands:
+  - mkdir -p /app/lib/ffmpeg
 modules:
   - name: mpc-qt
     buildsystem: qmake
