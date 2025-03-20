@@ -1,6 +1,6 @@
 app-id: io.github.mpc_qt.mpc-qt
 runtime: org.kde.Platform
-runtime-version: 6.7
+runtime-version: '6.8'
 sdk: org.kde.Sdk
 command: mpc-qt
 rename-icon: mpc-qt
@@ -8,15 +8,27 @@ copy-icon: true
 finish-args:
   - --share=ipc
   - --share=network
+# We support both Xwayland and Wayland because Wayland doesn't allow resizing the window
   - --socket=x11
   - --socket=wayland
   - --socket=pulseaudio
   - --device=dri
+# These can't be :ro to access subtitles when file opened from the app
+  - --filesystem=/media
+  - --filesystem=/run/media
+  - --filesystem=/mnt
+  - --filesystem=xdg-desktop
+  - --filesystem=xdg-documents
+  - --filesystem=xdg-download
+  - --filesystem=xdg-music
+  - --filesystem=xdg-pictures
+  - --filesystem=xdg-public-share
+  - --filesystem=xdg-videos
   - --filesystem=xdg-run/gamescope-0:ro
   - --filesystem=xdg-run/pipewire-0:ro
-  - --filesystem=xdg-pictures
   - --talk-name=org.freedesktop.ScreenSaver
   - --own-name=org.mpris.MediaPlayer2.MpcQt
+  - --system-talk-name=org.freedesktop.UDisks2
 cleanup:
   - '*.a'
   - '*.la'
