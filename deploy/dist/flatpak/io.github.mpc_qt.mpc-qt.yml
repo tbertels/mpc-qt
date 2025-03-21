@@ -5,11 +5,6 @@ sdk: org.kde.Sdk
 command: mpc-qt
 rename-icon: mpc-qt
 copy-icon: true
-sdk-extensions:
-  - org.freedesktop.Sdk.Extension.rust-stable
-  - org.freedesktop.Sdk.Extension.llvm18
-base: com.riverbankcomputing.PyQt.BaseApp
-base-version: '6.8'
 add-extensions:
   org.freedesktop.Platform.ffmpeg-full:
     directory: lib/ffmpeg
@@ -178,22 +173,6 @@ modules:
               stable-only: true
               url-template: https://xorg.freedesktop.org/archive/individual/lib/libXpresent-$version.tar.xz
 
-  - name: miniupnpc
-    buildsystem: cmake-ninja
-    config-opts:
-      - -DUPNPC_BUILD_STATIC=FALSE
-      - -DUPNPC_BUILD_SHARED=TRUE
-      - -DUPNPC_BUILD_TESTS=FALSE
-      - -DUPNPC_BUILD_SAMPLE=FALSE
-    sources:
-      - type: archive
-        sha256: 985de16d2e5449c3ba0d3663a0c76cb2bff82472a0eb7a306107d93f44586ffe
-        url: https://miniupnp.tuxfamily.org/files/miniupnpc-2.3.2.tar.gz
-        x-checker-data:
-          type: anitya
-          project-id: 1986
-          url-template: https://miniupnp.tuxfamily.org/files/miniupnpc-$version.tar.gz
-
   - name: lapack
     buildsystem: cmake-ninja
     builddir: true
@@ -233,98 +212,6 @@ modules:
           type: anitya
           project-id: 2540
           url-template: https://github.com/xianyi/OpenBLAS/archive/v$version.tar.gz
-
-  - python3-sources.yaml
-
-  - name: python3-patchelf
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "patchelf" --no-build-isolation
-    cleanup:
-      - '*'
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/83/ec/ac383eb82792e092d8037649b382cf78a7b79c2ce4e5b861f61519b9b14e/patchelf-0.17.2.1.tar.gz
-        sha256: a6eb0dd452ce4127d0d5e1eb26515e39186fa609364274bc1b0b77539cfa7031
-
-  - name: python3-distro
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "distro" --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/12/b3/231ffd4ab1fc9d679809f356cebee130ac7daa00d6d6f3206dd4fd137e9e/distro-1.9.0-py3-none-any.whl
-        sha256: 7bffd925d65168f85027d8da9af6bddab658135b840670a223589bc0c8ef02b2
-
-  - name: python3-build
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "build" --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/e2/03/f3c8ba0a6b6e30d7d18c40faab90807c9bb5e9a1e3b2fe2008af624a9c97/build-1.2.1-py3-none-any.whl
-        sha256: 75e10f767a433d9a86e50d83f418e83efc18ede923ee5ff7df93b6cb0306c5d4
-      - type: file
-        url: https://files.pythonhosted.org/packages/08/aa/cc0199a5f0ad350994d660967a8efb233fe0416e4639146c089643407ce6/packaging-24.1-py3-none-any.whl
-        sha256: 5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124
-      - type: file
-        url: https://files.pythonhosted.org/packages/ae/f3/431b9d5fe7d14af7a32340792ef43b8a714e7726f1d7b69cc4e8e7a3f1d7/pyproject_hooks-1.1.0-py3-none-any.whl
-        sha256: 7ceeefe9aec63a1064c18d939bdc3adf2d8aa1988a510afec15151578b232aa2
-
-  - name: python3-PyOpenGL
-    buildsystem: simple
-    build-commands:
-      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
-        --prefix=${FLATPAK_DEST} "PyOpenGL" --no-build-isolation
-    sources:
-      - type: file
-        url: https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
-        sha256: a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a
-
-  - name: pyside6
-    buildsystem: simple
-    build-options:
-      append-path: /usr/lib/sdk/llvm18/bin
-      append-ld-library-path: /usr/lib/sdk/llvm18/lib
-      env:
-        LLVM_INSTALL_DIR: /usr/lib/sdk/llvm18
-    cleanup:
-      - /share/PySide6
-      - /bin/pyside6-*
-      - /lib/python*/site-packages/PySide6/scripts
-    build-commands:
-      - python3 setup.py build --qtpaths=/usr/bin/qtpaths --ignore-git --parallel=8
-        --log-level=verbose --no-qt-tools --flatpak
-      - python3 create_wheels.py --build-dir ./build/qfp-*-release
-      - pip install ./dist/*.whl --prefix=${FLATPAK_DEST}
-    sources:
-      - type: git
-        url: https://code.qt.io/pyside/pyside-setup.git
-        tag: v6.8.0.2
-
-  - name: swftools
-    buildsystem: autotools
-    build-options:
-      cflags: -Wno-error=incompatible-pointer-types
-    sources:
-      - type: archive
-        url: http://www.swftools.org/swftools-0.9.2.tar.gz
-        sha256: bf6891bfc6bf535a1a99a485478f7896ebacbe3bbf545ba551298080a26f01f1
-      - type: shell
-        commands:
-          - rm config.sub config.guess
-          - cp /usr/share/automake-*/config.{sub,guess} .
-      - type: patch
-        path: patches/swftools-pointer.patch
-      - type: patch
-        path: patches/swftools-giflib-5.1.patch
-      - type: patch
-        path: patches/swftools-extern.patch
-      - type: patch
-        path: patches/swftools-install.patch
 
   - name: mpc-qt
     buildsystem: qmake
