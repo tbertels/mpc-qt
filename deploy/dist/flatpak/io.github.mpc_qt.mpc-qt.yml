@@ -7,7 +7,7 @@ rename-icon: mpc-qt
 copy-icon: true
 add-extensions:
   org.freedesktop.Platform.ffmpeg-full:
-    version: '24.08'
+    version: '25.08beta'
     directory: lib/ffmpeg
     add-ld-path: .
 add-build-extensions:
@@ -15,7 +15,7 @@ add-build-extensions:
     directory: lib/ffmpeg
     add-ld-path: .
     no-autodownload: true
-    version: '24.08'
+    version: '25.08beta'
 finish-args:
   - --share=ipc
   - --share=network
