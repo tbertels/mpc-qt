@@ -139,12 +139,6 @@ modules:
 
           - name: libplacebo
             buildsystem: meson
-            config-opts:
-              - -Dopengl=enabled
-              - -Dvulkan=enabled
-              - -Dglslang=disabled
-              - -Dd3d11=disabled
-              - -Ddemos=False
             sources:
               - type: archive
                 url: https://code.videolan.org/videolan/libplacebo/-/archive/v7.349.0/libplacebo-v7.349.0.tar.gz
