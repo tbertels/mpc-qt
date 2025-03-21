@@ -11,6 +11,12 @@ add-extensions:
     directory: lib/ffmpeg
     add-ld-path: .
     autodelete: false
+add-build-extensions:
+  org.freedesktop.Platform.ffmpeg-full:
+    directory: lib/ffmpeg
+    add-ld-path: .
+    no-autodownload: true
+    version: '24.08'
 finish-args:
   - --share=ipc
   - --share=network
@@ -43,7 +49,7 @@ cleanup:
   - /lib/pkgconfig
   - /share/man
 cleanup-commands:
-  - mkdir -p /app/lib/ffmpeg
+  - mkdir -p ${FLATPAK_DEST}/lib/ffmpeg
 modules:
   - name: mpc-qt
     buildsystem: qmake
