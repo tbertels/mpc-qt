@@ -5,51 +5,327 @@ sdk: org.kde.Sdk
 command: mpc-qt
 rename-icon: mpc-qt
 copy-icon: true
+sdk-extensions:
+  - org.freedesktop.Sdk.Extension.rust-stable
+  - org.freedesktop.Sdk.Extension.llvm18
+base: com.riverbankcomputing.PyQt.BaseApp
+base-version: '6.8'
 add-extensions:
   org.freedesktop.Platform.ffmpeg-full:
-    version: '24.08'
     directory: lib/ffmpeg
     add-ld-path: .
+    version: '24.08'
 add-build-extensions:
   org.freedesktop.Platform.ffmpeg-full:
     directory: lib/ffmpeg
     add-ld-path: .
     no-autodownload: true
     version: '24.08'
+cleanup-commands:
+  - /app/cleanup-BaseApp.sh
+  - mkdir -p ${FLATPAK_DEST}/lib/ffmpeg
+build-options:
+  env:
+    - BASEAPP_REMOVE_WEBENGINE=1
 finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --socket=pulseaudio
   - --share=ipc
   - --share=network
-# We support both Xwayland and Wayland because Wayland doesn't allow resizing the window
-  - --socket=x11
-  - --socket=wayland
-  - --socket=pulseaudio
   - --device=dri
-# These can't be :ro to access subtitles when file opened from the app
-  - --filesystem=/media
-  - --filesystem=/run/media
-  - --filesystem=/mnt
-  - --filesystem=xdg-desktop
-  - --filesystem=xdg-documents
-  - --filesystem=xdg-download
-  - --filesystem=xdg-music
-  - --filesystem=xdg-pictures
-  - --filesystem=xdg-public-share
-  - --filesystem=xdg-videos
-  - --filesystem=xdg-run/gamescope-0:ro
-  - --filesystem=xdg-run/pipewire-0:ro
-  - --talk-name=org.freedesktop.ScreenSaver
-  - --own-name=org.mpris.MediaPlayer2.MpcQt
-  - --system-talk-name=org.freedesktop.UDisks2
+  - --filesystem=home
+  - --talk-name=org.kde.StatusNotifierWatcher
 cleanup:
   - '*.a'
   - '*.la'
   - /include
+  - /etc
+  - /man
   - /lib/cmake
   - /lib/pkgconfig
+  - /lib/metatypes
+  - /share/bash-completion
+  - /share/doc
   - /share/man
-cleanup-commands:
-  - mkdir -p ${FLATPAK_DEST}/lib/ffmpeg
+  - /share/zsh
 modules:
+  - name: mpv
+    buildsystem: meson
+    config-opts:
+      - -Dbuild-date=false
+      - -Dlibmpv=true
+      - -Dcplayer=false
+      - -Dmanpage-build=disabled
+    sources:
+      - type: archive
+        url: https://github.com/mpv-player/mpv/archive/v0.39.0.tar.gz
+        sha256: 2ca92437affb62c2b559b4419ea4785c70d023590500e8a52e95ea3ab4554683
+        x-checker-data:
+          type: anitya
+          project-id: 5348
+          stable-only: true
+          url-template: https://github.com/mpv-player/mpv/archive/v$version.tar.gz
+    modules:
+      - name: libplacebo
+        buildsystem: meson
+        config-opts:
+          - -Dd3d11=disabled
+          - -Ddemos=False
+        sources:
+          - type: archive
+            url: https://code.videolan.org/videolan/libplacebo/-/archive/v7.349.0/libplacebo-v7.349.0.tar.gz
+            sha256: 79120e685a1836344b51b13b6a5661622486a84e4d4a35f6c8d01679a20fbc86
+            x-checker-data:
+              type: anitya
+              project-id: 20101
+              stable-only: true
+              url-template: https://code.videolan.org/videolan/libplacebo/-/archive/v$version/libplacebo-v$version.tar.gz
+          - type: archive
+            url: https://github.com/pallets/markupsafe/archive/refs/tags/3.0.2.tar.gz
+            sha256: cd182103704bfafefce25369fd27f14a5f578f078b7f3ddd1ce2cb940b86403a
+            x-checker-data:
+              type: anitya
+              project-id: 3918
+              stable-only: true
+              url-template: https://github.com/pallets/markupsafe/archive/refs/tags/$version.tar.gz
+            dest: 3rdparty/markupsafe
+          - type: archive
+            url: https://github.com/pallets/jinja/archive/refs/tags/3.1.6.tar.gz
+            sha256: 2074b22a72caa65474902234b320d73463d6d4c223ee49f4b433495758356337
+            x-checker-data:
+              type: anitya
+              project-id: 3894
+              stable-only: true
+              url-template: https://github.com/pallets/jinja/archive/refs/tags/$version.tar.gz
+            dest: 3rdparty/jinja
+          - type: archive
+            url: https://github.com/Dav1dde/glad/archive/refs/tags/v2.0.8.tar.gz
+            sha256: 44f06f9195427c7017f5028d0894f57eb216b0a8f7c4eda7ce883732aeb2d0fc
+            x-checker-data:
+              type: anitya
+              project-id: 300234
+              stable-only: true
+              url-template: https://github.com/Dav1dde/glad/archive/refs/tags/v$version.tar.gz
+            dest: 3rdparty/glad
+        modules:
+          - name: glslang
+            buildsystem: cmake-ninja
+            config-opts:
+              - -DCMAKE_BUILD_TYPE=Release
+              - -DBUILD_SHARED_LIBS=ON
+            cleanup:
+              - /bin
+            sources:
+              - type: archive
+                url: https://github.com/KhronosGroup/glslang/archive/15.0.0.tar.gz
+                sha256: c31c8c2e89af907507c0631273989526ee7d5cdf7df95ececd628fd7b811e064
+                # x-checker-data:
+                #  type: anitya
+                #  project-id: 205796
+                #  stable-only: true
+                #  url-template: https://github.com/KhronosGroup/glslang/archive/$version.tar.gz
+              - type: archive
+                url: https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/sdk-1.3.261.1.tar.gz
+                sha256: ead95c626ad482882a141d1aa0ce47b9453871f72c42c0b28d39c82f60a52008
+                dest: External/spirv-tools
+                x-checker-data:
+                  type: anitya
+                  stable-only: true
+                  project-id: 334920
+                  url-template: https://github.com/KhronosGroup/SPIRV-Tools/archive/refs/tags/sdk-$version.tar.gz
+              - type: archive
+                url: https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/sdk-1.3.261.1.tar.gz
+                sha256: 32b4c6ae6a2fa9b56c2c17233c8056da47e331f76e117729925825ea3e77a739
+                dest: External/spirv-tools/external/spirv-headers
+                x-checker-data:
+                  type: anitya
+                  stable-only: true
+                  project-id: 334920
+                  url-template: https://github.com/KhronosGroup/SPIRV-Headers/archive/refs/tags/sdk-$version.tar.gz
+      - name: libass
+        config-opts:
+          - --disable-static
+        sources:
+          - type: archive
+            url: https://github.com/libass/libass/releases/download/0.17.3/libass-0.17.3.tar.xz
+            sha256: eae425da50f0015c21f7b3a9c7262a910f0218af469e22e2931462fed3c50959
+            x-checker-data:
+              type: anitya
+              project-id: 1560
+              stable-only: true
+              url-template: https://github.com/libass/libass/releases/download/$version/libass-$version.tar.xz
+      - name: libXmu
+        buildsystem: autotools
+        sources:
+          - type: archive
+            url: https://xorg.freedesktop.org/releases/individual/lib/libXmu-1.2.1.tar.xz
+            sha256: fcb27793248a39e5fcc5b9c4aec40cc0734b3ca76aac3d7d1c264e7f7e14e8b2
+            x-checker-data:
+              type: anitya
+              project-id: 1785
+              stable-only: true
+              url-template: https://xorg.freedesktop.org/releases/individual/lib/libXmu-$version.tar.xz
+      - name: libXpresent
+        buildsystem: autotools
+        sources:
+          - type: archive
+            url: https://xorg.freedesktop.org/archive/individual/lib/libXpresent-1.0.1.tar.xz
+            sha256: b964df9e5a066daa5e08d2dc82692c57ca27d00b8cc257e8e960c9f1cf26231b
+            x-checker-data:
+              type: anitya
+              project-id: 17166
+              stable-only: true
+              url-template: https://xorg.freedesktop.org/archive/individual/lib/libXpresent-$version.tar.xz
+
+  - name: miniupnpc
+    buildsystem: cmake-ninja
+    config-opts:
+      - -DUPNPC_BUILD_STATIC=FALSE
+      - -DUPNPC_BUILD_SHARED=TRUE
+      - -DUPNPC_BUILD_TESTS=FALSE
+      - -DUPNPC_BUILD_SAMPLE=FALSE
+    sources:
+      - type: archive
+        sha256: 985de16d2e5449c3ba0d3663a0c76cb2bff82472a0eb7a306107d93f44586ffe
+        url: https://miniupnp.tuxfamily.org/files/miniupnpc-2.3.2.tar.gz
+        x-checker-data:
+          type: anitya
+          project-id: 1986
+          url-template: https://miniupnp.tuxfamily.org/files/miniupnpc-$version.tar.gz
+
+  - name: lapack
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DBUILD_SHARED_LIBS=ON
+      - -DBUILD_TESTING=OFF
+      - -DLAPACKE=ON
+      - -DCBLAS=ON
+      - -DCMAKE_Fortran_COMPILER=gfortran
+    sources:
+      - type: archive
+        url: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v3.12.1.tar.gz
+        sha256: 2ca6407a001a474d4d4d35f3a61550156050c48016d949f0da0529c0aa052422
+        x-checker-data:
+          type: anitya
+          project-id: 1534
+          stable-only: true
+          url-template: https://github.com/Reference-LAPACK/lapack/archive/refs/tags/v$version.tar.gz
+
+  - name: openblas
+    buildsystem: cmake-ninja
+    builddir: true
+    config-opts:
+      - -DBUILD_SHARED_LIBS=ON
+      - -DBUILD_TESTING=OFF
+      - -DNO_AFFINITY=ON
+      - -DUSE_OPENMP=1
+      - -DNO_WARMUP=1
+      - -DCORE=CORE2
+      - -DNUM_THREADS=64
+      - -DDYNAMIC_ARCH=ON
+    sources:
+      - type: archive
+        url: https://github.com/xianyi/OpenBLAS/archive/v0.3.29.tar.gz
+        sha256: 38240eee1b29e2bde47ebb5d61160207dc68668a54cac62c076bb5032013b1eb
+        x-checker-data:
+          type: anitya
+          project-id: 2540
+          url-template: https://github.com/xianyi/OpenBLAS/archive/v$version.tar.gz
+
+  - python3-sources.yaml
+
+  - name: python3-patchelf
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+        --prefix=${FLATPAK_DEST} "patchelf" --no-build-isolation
+    cleanup:
+      - '*'
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/83/ec/ac383eb82792e092d8037649b382cf78a7b79c2ce4e5b861f61519b9b14e/patchelf-0.17.2.1.tar.gz
+        sha256: a6eb0dd452ce4127d0d5e1eb26515e39186fa609364274bc1b0b77539cfa7031
+
+  - name: python3-distro
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+        --prefix=${FLATPAK_DEST} "distro" --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/12/b3/231ffd4ab1fc9d679809f356cebee130ac7daa00d6d6f3206dd4fd137e9e/distro-1.9.0-py3-none-any.whl
+        sha256: 7bffd925d65168f85027d8da9af6bddab658135b840670a223589bc0c8ef02b2
+
+  - name: python3-build
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+        --prefix=${FLATPAK_DEST} "build" --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/e2/03/f3c8ba0a6b6e30d7d18c40faab90807c9bb5e9a1e3b2fe2008af624a9c97/build-1.2.1-py3-none-any.whl
+        sha256: 75e10f767a433d9a86e50d83f418e83efc18ede923ee5ff7df93b6cb0306c5d4
+      - type: file
+        url: https://files.pythonhosted.org/packages/08/aa/cc0199a5f0ad350994d660967a8efb233fe0416e4639146c089643407ce6/packaging-24.1-py3-none-any.whl
+        sha256: 5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124
+      - type: file
+        url: https://files.pythonhosted.org/packages/ae/f3/431b9d5fe7d14af7a32340792ef43b8a714e7726f1d7b69cc4e8e7a3f1d7/pyproject_hooks-1.1.0-py3-none-any.whl
+        sha256: 7ceeefe9aec63a1064c18d939bdc3adf2d8aa1988a510afec15151578b232aa2
+
+  - name: python3-PyOpenGL
+    buildsystem: simple
+    build-commands:
+      - pip3 install --verbose --exists-action=i --no-index --find-links="file://${PWD}"
+        --prefix=${FLATPAK_DEST} "PyOpenGL" --no-build-isolation
+    sources:
+      - type: file
+        url: https://files.pythonhosted.org/packages/99/48/00e31747821d3fc56faddd00a4725454d1e694a8b67d715cf20f531506a5/PyOpenGL-3.1.7-py3-none-any.whl
+        sha256: a6ab19cf290df6101aaf7470843a9c46207789855746399d0af92521a0a92b7a
+
+  - name: pyside6
+    buildsystem: simple
+    build-options:
+      append-path: /usr/lib/sdk/llvm18/bin
+      append-ld-library-path: /usr/lib/sdk/llvm18/lib
+      env:
+        LLVM_INSTALL_DIR: /usr/lib/sdk/llvm18
+    cleanup:
+      - /share/PySide6
+      - /bin/pyside6-*
+      - /lib/python*/site-packages/PySide6/scripts
+    build-commands:
+      - python3 setup.py build --qtpaths=/usr/bin/qtpaths --ignore-git --parallel=8
+        --log-level=verbose --no-qt-tools --flatpak
+      - python3 create_wheels.py --build-dir ./build/qfp-*-release
+      - pip install ./dist/*.whl --prefix=${FLATPAK_DEST}
+    sources:
+      - type: git
+        url: https://code.qt.io/pyside/pyside-setup.git
+        tag: v6.8.0.2
+
+  - name: swftools
+    buildsystem: autotools
+    build-options:
+      cflags: -Wno-error=incompatible-pointer-types
+    sources:
+      - type: archive
+        url: http://www.swftools.org/swftools-0.9.2.tar.gz
+        sha256: bf6891bfc6bf535a1a99a485478f7896ebacbe3bbf545ba551298080a26f01f1
+      - type: shell
+        commands:
+          - rm config.sub config.guess
+          - cp /usr/share/automake-*/config.{sub,guess} .
+      - type: patch
+        path: patches/swftools-pointer.patch
+      - type: patch
+        path: patches/swftools-giflib-5.1.patch
+      - type: patch
+        path: patches/swftools-extern.patch
+      - type: patch
+        path: patches/swftools-install.patch
+
   - name: mpc-qt
     buildsystem: qmake
     sources:
@@ -57,186 +333,3 @@ modules:
         url: https://github.com/mpc-qt/mpc-qt.git
         tag: v24.12.1-flatpak
         commit: ad889e64248d9c4bc4519fdb827dc7a7016286d0
-    modules:
-      - name: libmpv
-        cleanup:
-          - /share/bash-completion
-          - /share/zsh
-          - /share/doc
-          - /share/icons
-          - /share/applications
-        buildsystem: meson
-        config-opts:
-          - -Dlibmpv=true
-          - -Dcplayer=false
-          - -Dlua=enabled
-          - -Ddebug=false
-          - -Dbuild-date=false
-          - -Dalsa=disabled
-          - -Dmanpage-build=disabled
-          - -Dvulkan=enabled
-        sources:
-          - type: archive
-            url: https://github.com/mpv-player/mpv/archive/refs/tags/v0.39.0.tar.gz
-            sha256: 2ca92437affb62c2b559b4419ea4785c70d023590500e8a52e95ea3ab4554683
-            x-checker-data:
-              type: anitya
-              project-id: 5348
-              stable-only: true
-              url-template: https://github.com/mpv-player/mpv/archive/refs/tags/v$version.tar.gz
-        modules:
-          - name: luajit
-            no-autogen: true
-            make-args:
-              - BUILDMODE=dynamic
-              - PREFIX=${FLATPAK_DEST}
-            make-install-args:
-              - PREFIX=${FLATPAK_DEST}
-            sources:
-              - type: git
-                url: https://github.com/openresty/luajit2.git
-                tag: v2.1-20250117
-                commit: 93162f34e7424cd0ea3c4046a9ffacce621626bc
-                x-checker-data:
-                  type: git
-                  tag-pattern: ^v([\d.-]+)$
-                  stable-only: false
-            cleanup:
-              - /bin
-
-          - name: vapoursynth
-            config-opts:
-              - --with-python-prefix=${FLATPAK_DEST}
-
-            sources:
-              - type: archive
-                url: https://github.com/vapoursynth/vapoursynth/archive/refs/tags/R70.tar.gz
-                sha256: 59c813ec36046be33812408ff00e16cae63c6843af6acf4e34595910a80e267b
-                x-checker-data:
-                  type: anitya
-                  project-id: 15982
-                  stable-only: true
-                  url-template: https://github.com/vapoursynth/vapoursynth/archive/$version.tar.gz
-            modules:
-              - name: zimg
-                config-opts:
-                  - --disable-static
-                cleanup:
-                  - /include
-                  - /lib/pkgconfig
-                  - /share/doc
-                sources:
-                  - type: archive
-                    archive-type: tar
-                    url: https://api.github.com/repos/sekrit-twc/zimg/tarball/release-3.0.5
-                    sha256: 1b8998f03f4a49e4d730033143722b32bc28a5306ef809ccfb3b4bbb29e4b784
-                    x-checker-data:
-                      type: json
-                      url: https://api.github.com/repos/sekrit-twc/zimg/releases/latest
-                      url-query: .tarball_url
-                      version-query: .tag_name | sub("^release-"; "")
-                      timestamp-query: .published_at
-
-          - name: libplacebo
-            buildsystem: meson
-            sources:
-              - type: archive
-                url: https://code.videolan.org/videolan/libplacebo/-/archive/v7.349.0/libplacebo-v7.349.0.tar.gz
-                sha256: 79120e685a1836344b51b13b6a5661622486a84e4d4a35f6c8d01679a20fbc86
-                x-checker-data:
-                  type: anitya
-                  project-id: 20101
-                  stable-only: true
-                  url-template: https://code.videolan.org/videolan/libplacebo/-/archive/v$version/libplacebo-v$version.tar.gz
-              - type: archive
-                url: https://github.com/pallets/jinja/archive/refs/tags/3.1.5.tar.gz
-                sha256: 684d78790cc747f4b4b68b365783af8cac770c2c66d9f414b21c8b8480e019d0
-                dest: 3rdparty/jinja
-                x-checker-data:
-                  type: anitya
-                  project-id: 3894
-                  url-template: https://github.com/pallets/jinja/archive/refs/tags/$version.tar.gz
-              - type: archive
-                url: https://github.com/Dav1dde/glad/archive/refs/tags/v2.0.8.tar.gz
-                sha256: 44f06f9195427c7017f5028d0894f57eb216b0a8f7c4eda7ce883732aeb2d0fc
-                dest: 3rdparty/glad
-                x-checker-data:
-                  type: anitya
-                  project-id: 300234
-                  url-template: https://github.com/Dav1dde/glad/archive/refs/tags/v$version.tar.gz
-
-          - name: libXpresent
-            buildsystem: autotools
-            sources:
-              - type: archive
-                url: https://xorg.freedesktop.org/archive/individual/lib/libXpresent-1.0.1.tar.xz
-                sha256: b964df9e5a066daa5e08d2dc82692c57ca27d00b8cc257e8e960c9f1cf26231b
-                x-checker-data:
-                  type: anitya
-                  project-id: 17166
-                  stable-only: true
-                  url-template: https://xorg.freedesktop.org/archive/individual/lib/libXpresent-$version.tar.xz
-
-          - name: nv-codec-headers
-            cleanup:
-              - '*'
-            no-autogen: true
-            make-install-args:
-              - PREFIX=/app
-            sources:
-              - type: archive
-                url: https://github.com/FFmpeg/nv-codec-headers/archive/refs/tags/n13.0.19.0.tar.gz
-                sha256: 86d15d1a7c0ac73a0eafdfc57bebfeba7da8264595bf531cf4d8db1c22940116
-                x-checker-data:
-                  type: anitya
-                  project-id: 223796
-                  stable-only: true
-                  url-template: https://github.com/FFmpeg/nv-codec-headers/archive/refs/tags/n$version.tar.gz
-
-          - name: libass
-            config-opts:
-              - --disable-static
-            sources:
-              - type: archive
-                url: https://github.com/libass/libass/releases/download/0.17.3/libass-0.17.3.tar.gz
-                sha256: da7c348deb6fa6c24507afab2dee7545ba5dd5bbf90a137bfe9e738f7df68537
-                x-checker-data:
-                  type: anitya
-                  project-id: 1560
-                  stable-only: true
-                  url-template: https://github.com/libass/libass/releases/download/$version/libass-$version.tar.gz
-
-          - name: uchardet
-            buildsystem: cmake-ninja
-            config-opts:
-              - -DCMAKE_BUILD_TYPE=Release
-              - -DBUILD_STATIC=0
-            cleanup:
-              - /bin
-            sources:
-              - type: archive
-                url: https://www.freedesktop.org/software/uchardet/releases/uchardet-0.0.8.tar.xz
-                sha256: e97a60cfc00a1c147a674b097bb1422abd9fa78a2d9ce3f3fdcc2e78a34ac5f0
-                x-checker-data:
-                  type: anitya
-                  project-id: 9265
-                  stable-only: true
-                  url-template: https://www.freedesktop.org/software/uchardet/releases/uchardet-$version.tar.xz
-
-      - name: yt-dlp
-        no-autogen: true
-        no-make-install: true
-        make-args:
-          - yt-dlp
-          - PYTHON=/usr/bin/python3
-        post-install:
-          - install yt-dlp /app/bin
-        sources:
-          - type: archive
-            url: https://github.com/yt-dlp/yt-dlp/archive/refs/tags/2025.02.19.tar.gz
-            sha256: 3942d04ac56b7cbd51881653946662dc84b8628c9405f9e9bacb29d0259e0ab1
-            x-checker-data:
-              type: anitya
-              project-id: 143399
-              stable-only: true
-              url-template: https://github.com/yt-dlp/yt-dlp/archive/refs/tags/$version.tar.gz
