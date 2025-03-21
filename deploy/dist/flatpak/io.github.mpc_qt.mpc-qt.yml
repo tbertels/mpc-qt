@@ -10,7 +10,6 @@ add-extensions:
     version: '24.08'
     directory: lib/ffmpeg
     add-ld-path: .
-    autodelete: false
 add-build-extensions:
   org.freedesktop.Platform.ffmpeg-full:
     directory: lib/ffmpeg
@@ -69,6 +68,7 @@ modules:
         buildsystem: meson
         config-opts:
           - -Dlibmpv=true
+          - -Dcplayer=false
           - -Dlua=enabled
           - -Ddebug=false
           - -Dbuild-date=false
