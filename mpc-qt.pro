@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui network widgets openglwidgets svg
+QT       += core gui network widgets openglwidgets svg multimedia multimediawidgets
 
 QMAKE_CXXFLAGS += -Wall
 
