@@ -95,21 +95,16 @@ LCONVERT_LANGS=es fi id it nl ru zh_CN
 include(lconvert.pri)
 
 unix {
-    isEmpty(PREFIX) {
-        PREFIX=/usr/local
-    }
-    DEFINES += MPCQT_PREFIX=\\\"$$PREFIX\\\"
-
-    target.path = $$PREFIX/bin
+    target.path = bin
 
     docs.files = DOCS/ipc.md
-    docs.path = $$PREFIX/share/doc/mpc-qt/
+    docs.path = share/doc/mpc-qt/
 
     shortcut.files = io.github.mpc-qt.mpc-qt.desktop
-    shortcut.path = $$PREFIX/share/applications/
+    shortcut.path = share/applications/
 
     logo.files = images/icon/mpc-qt.svg
-    logo.path = $$PREFIX/share/icons/hicolor/scalable/apps/
+    logo.path = share/icons/hicolor/scalable/apps/
 
     INSTALLS += target docs shortcut logo
 }
