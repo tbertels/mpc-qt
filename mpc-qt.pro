@@ -95,8 +95,6 @@ LCONVERT_LANGS=es fi id it nl ru zh_CN
 include(lconvert.pri)
 
 unix {
-    target.path = bin
-
     docs.files = DOCS/ipc.md
     docs.path = share/doc/mpc-qt/
 
