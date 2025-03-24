@@ -425,7 +425,7 @@ void Flow::earlyPlatformOverride()
     QVariantMap settings = s.readVMap(fileSettings);
     if (!settings.value("tweaksPreferWayland", QVariant(false)).toBool())
         qputenv("QT_QPA_PLATFORM", "xcb");
-    else if (!qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY")) {
+    else if (qEnvironmentVariable("XDG_SESSION_TYPE") == "wayland") {
         qputenv("QT_QPA_PLATFORM", "wayland");
         settingsDisableWindowManagement = true;
     }
