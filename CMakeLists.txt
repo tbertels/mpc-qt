@@ -286,14 +286,8 @@ qt_add_resources(mpc-qt "res"
 )
 
 if(UNIX)
-    if(NOT DEFINED PREFIX)
-        set(PREFIX "/usr/local")
-    endif()
-
-    target_compile_definitions(mpc-qt PRIVATE MPCQT_PREFIX="${PREFIX}")
-
-    install(TARGETS mpc-qt DESTINATION ${PREFIX}/bin)
-    install(FILES DOCS/ipc.md DESTINATION ${PREFIX}/share/doc/mpc-qt)
-    install(FILES io.github.mpc-qt.mpc-qt.desktop DESTINATION ${PREFIX}/share/applications)
-    install(FILES images/icon/mpc-qt.svg DESTINATION ${PREFIX}/share/icons/hicolor/scalable/apps)
+    install(TARGETS mpc-qt DESTINATION bin)
+    install(FILES DOCS/ipc.md DESTINATION share/doc/mpc-qt)
+    install(FILES io.github.mpc-qt.mpc-qt.desktop DESTINATION share/applications)
+    install(FILES images/icon/mpc-qt.svg DESTINATION share/icons/hicolor/scalable/apps)
 endif()
