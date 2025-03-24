@@ -288,6 +288,6 @@ qt_add_resources(mpc-qt "res"
 if(UNIX)
     install(TARGETS mpc-qt DESTINATION bin)
     install(FILES DOCS/ipc.md DESTINATION share/doc/mpc-qt)
-    install(FILES io.github.mpc-qt.mpc-qt.desktop DESTINATION share/applications)
+    install(FILES io.github.mpc_qt.mpc-qt.desktop DESTINATION share/applications)
     install(FILES images/icon/mpc-qt.svg DESTINATION share/icons/hicolor/scalable/apps)
 endif()
