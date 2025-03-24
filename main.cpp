@@ -425,8 +425,10 @@ void Flow::earlyPlatformOverride()
     QVariantMap settings = s.readVMap(fileSettings);
     if (!settings.value("tweaksPreferWayland", QVariant(false)).toBool())
         qputenv("QT_QPA_PLATFORM", "xcb");
-    else if (!qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY"))
+    else if (!qEnvironmentVariableIsEmpty("WAYLAND_DISPLAY")) {
+        qputenv("QT_QPA_PLATFORM", "wayland");
         settingsDisableWindowManagement = true;
+    }
     // The Nvidia drivers don't work well with EGL
     if (!nvidiaDetected)
         qputenv("QT_XCB_GL_INTEGRATION", "xcb_egl");
