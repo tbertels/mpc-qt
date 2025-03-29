@@ -47,6 +47,8 @@ mkdir -p "$DEST/imageformats"
 mkdir -p "$DEST/platforms"
 mkdir -p "$DEST/styles"
 
+cp mpc-qt_resource.rc "$DEST"
+
 echo Copying documents
 cp DOCS/ipc.md  "$DEST/doc"
 
