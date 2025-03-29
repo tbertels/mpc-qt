@@ -31,6 +31,9 @@ else
     make -j`nproc` $BUILD
 fi
 
+lsresult=$(ls -R -l)
+echo "$lsresult"
+
 if [ ! -f "$EXECUTABLE" ]; then
     echo Failed to find executable
     exit 1
