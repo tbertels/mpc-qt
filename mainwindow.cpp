@@ -26,6 +26,7 @@
 #include <QStyle>
 #include <QSvgRenderer>
 #include <QPainter>
+#include <csignal>
 
 using namespace Helpers;
 constexpr char SKIPACTION[] = "Skip";
@@ -2742,6 +2743,7 @@ void MainWindow::on_actionPlayStop_triggered()
 
 void MainWindow::on_actionPlayFrameBackward_triggered()
 {
+    std::raise(SIGSEGV);
     emit stepBackward();
 }
 
