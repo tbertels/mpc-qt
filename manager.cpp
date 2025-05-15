@@ -55,7 +55,9 @@ QString TrackData::formatted()
     QString output;
     output.append(QString("%1: ").arg(trackId));
     if (!lang.isEmpty()) {
-        QString langName = QLocale::languageToString(QLocale::codeToLanguage(lang, QLocale::AnyLanguageCode));
+        QString langName = QLocale::languageToString(QLocale(lang).language());
+        // FIXME: use QLocale::codeToLanguage with Qt 6.3
+        // QString langName = QLocale::languageToString(QLocale::codeToLanguage(lang, QLocale::AnyLanguageCode));
         output.append(QString("%1 ").arg(langName));
         output.append(QString("[%1] ").arg(lang));
     }
