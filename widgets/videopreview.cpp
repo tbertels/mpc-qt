@@ -1,6 +1,7 @@
 #include <QApplication>
 #include <QToolTip>
 #include "videopreview.h"
+#include "platform/unify.h"
 
 VideoPreview::VideoPreview(QWidget *parent) : QWidget(parent)
 {
@@ -17,6 +18,8 @@ VideoPreview::VideoPreview(QWidget *parent) : QWidget(parent)
     layout->addWidget(textLabel);
     setLayout(layout);
     setWindowFlags(Qt::Tool | Qt::FramelessWindowHint);
+    if (Platform::isWindows)
+        setWindowFlags(Qt::WindowStaysOnTopHint);
 
     textLabel->setAutoFillBackground(true);
     QPalette tooltipPalette = QToolTip::palette();
