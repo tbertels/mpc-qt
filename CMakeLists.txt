@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-Wall -Wextra -O2)
 
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Wall -Wextra -O2 -g")
+
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # For clangd
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -30,8 +32,6 @@ if(DEFINED MPCQT_VERSION)
     set(FILEFLAGS_WIN "0x0L")
 else()
     add_compile_definitions(MPCQT_DEVELOPMENT)
-    # Set Windows metadata to "contains debugging information"
-    set(FILEFLAGS_WIN "VS_FF_DEBUG")
     # Check if we are in a git repository
     find_package(Git QUIET)
     if(GIT_FOUND AND EXISTS "${PROJECT_SOURCE_DIR}/.git")

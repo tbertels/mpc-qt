@@ -19,8 +19,9 @@ EXECUTABLE="$BUILDDIR/mpc-qt.exe"
 BINDIR="/mingw64/bin"
 SUFFIX="win-x64-$VERSION"
 DEST="mpc-qt-$SUFFIX"
+DEBUGSYMBOLS="debug-symbols"
 
-cmake -DMPCQT_VERSION=$VERSION -DENABLE_LOCAL_MPV=ON -G Ninja -B build
+cmake -DMPCQT_VERSION=$VERSION -DENABLE_LOCAL_MPV=ON -DCMAKE_BUILD_TYPE=RelWithDebInfo -G Ninja -B build
 ninja -C build
 
 if [ ! -f "$EXECUTABLE" ]; then
@@ -29,6 +30,7 @@ if [ ! -f "$EXECUTABLE" ]; then
 fi
 
 echo Making directories
+mkdir -p "$DEBUGSYMBOLS"
 mkdir -p "$DEST"
 mkdir -p "$DEST/doc"
 mkdir -p "$DEST/iconengines"
@@ -50,6 +52,8 @@ cp "$PLUGDIR/platforms/qoffscreen.dll"          "$DEST/platforms"
 cp "$PLUGDIR/platforms/qwindows.dll"            "$DEST/platforms"
 cp "$PLUGDIR/styles/qmodernwindowsstyle.dll"    "$DEST/styles"
 
+echo Saving executable with symbols
+cp $EXECUTABLE $DEBUGSYMBOLS/mpc-qt.exe
 
 # Use ldd to find dependencies and copy them
 echo Finding dependencies and copying them

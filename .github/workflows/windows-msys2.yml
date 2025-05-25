@@ -62,6 +62,11 @@ jobs:
       with:
         name: "mpc-qt-win"
         path: mpc-qt-*/
+    - name: Upload debug symbols
+      uses: actions/upload-artifact@v4
+      with:
+        name: "mpc-qt-win-debug-symbols"
+        path: debug-symbols/mpc-qt.exe
   tests:
     name: Windows
     needs: build
