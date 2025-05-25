@@ -1,4 +1,5 @@
 #include <QToolTip>
+#include <csignal>
 #include "videopreview.h"
 
 constexpr int previewMarginX = 20;
@@ -83,6 +84,7 @@ void VideoPreview::updateWidth(double newAspect)
     videoWidget->setFixedSize(newWidth, videoHeight);
     textLabel->setFixedSize(newWidth, labelHeight);
     aspectRatioSet = true;
+    std::raise(SIGSEGV);
     if (shouldBeShown)
         show();
     else
