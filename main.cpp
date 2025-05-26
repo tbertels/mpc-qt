@@ -12,7 +12,7 @@
 #include <QLockFile>
 #include <QThread>
 #include <QTranslator>
-#include <execinfo.h>
+#include <boost/stacktrace.hpp>
 #include "logger.h"
 #include "main.h"
 #include "qprocess.h"
@@ -98,15 +98,13 @@ int main(int argc, char *argv[])
 }
 
 void signalHandler(int signal) {
-    void *buffer[20];
-    int size = backtrace(buffer, 20);;
     if (signal == SIGSEGV) {
-        Logger::log("main", "Segmentation fault! Please report this error.");
+        std::ostringstream oss;
+        oss << boost::stacktrace::stacktrace();
         Logger::log("main", "Stack trace:");
-        auto lines = backtrace_symbols(buffer, size);
-        for (auto i = 0; i < size; i++) {
-            Logger::log("main", QString(lines[i]));
-        }
+        Logger::log("main", QString::fromStdString(oss.str()));
+        
+        Logger::log("main", "Segmentation fault! Please report this error.");
         QMetaObject::invokeMethod(Logger::singleton(), "flushMessages", Qt::BlockingQueuedConnection);
         std::signal(SIGSEGV, SIG_DFL);
         std::raise(SIGSEGV);

@@ -166,6 +166,13 @@ target_link_libraries(mpc-qt PRIVATE
     Qt::Widgets
 )
 
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC ${Boost_STACKTRACE_BASIC_LIBRARY}
+    PUBLIC ${Boost_STACKTRACE_BACKTRACE_LIBRARY}
+    PUBLIC ${Boost_STACKTRACE_ADDR2LINE_LIBRARY}
+    PUBLIC ${Boost_STACKTRACE_NOOP_LIBRARY}
+)
+
 if(UNIX)
     target_sources(mpc-qt PUBLIC
         ipc/mpris.cpp ipc/mpris.h
