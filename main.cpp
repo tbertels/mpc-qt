@@ -12,6 +12,7 @@
 #include <QLockFile>
 #include <QThread>
 #include <QTranslator>
+#include <execinfo.h>
 #include "logger.h"
 #include "main.h"
 #include "qprocess.h"
@@ -97,8 +98,15 @@ int main(int argc, char *argv[])
 }
 
 void signalHandler(int signal) {
+    void *buffer[20];
+    int size = backtrace(buffer, 20);;
     if (signal == SIGSEGV) {
         Logger::log("main", "Segmentation fault! Please report this error.");
+        Logger::log("main", "Stack trace:");
+        auto lines = backtrace_symbols(buffer, size);
+        for (auto i = 0; i < size; i++) {
+            Logger::log("main", QString(lines[i]));
+        }
         QMetaObject::invokeMethod(Logger::singleton(), "flushMessages", Qt::BlockingQueuedConnection);
         std::signal(SIGSEGV, SIG_DFL);
         std::raise(SIGSEGV);
