@@ -52,8 +52,9 @@ cp "$PLUGDIR/platforms/qoffscreen.dll"          "$DEST/platforms"
 cp "$PLUGDIR/platforms/qwindows.dll"            "$DEST/platforms"
 cp "$PLUGDIR/styles/qmodernwindowsstyle.dll"    "$DEST/styles"
 
-echo Saving executable with symbols
+echo Saving executable with symbols and stripping them
 cp $EXECUTABLE $DEBUGSYMBOLS/mpc-qt.exe
+strip --strip-unneeded $EXECUTABLE
 
 # Use ldd to find dependencies and copy them
 echo Finding dependencies and copying them
