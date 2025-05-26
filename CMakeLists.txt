@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-Wall -Wextra -O2 -no-pie)
 add_link_options(-fno-pie)
 
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Wall -Wextra -O2 -g")
+set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Wall -Wextra -O2 -gstabs")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # For clangd
 
