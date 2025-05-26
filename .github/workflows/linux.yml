@@ -27,6 +27,12 @@ jobs:
       with:
         name: "mpc-qt"
         path: bin/mpc-qt
+#         echo Saving debug symbols and stripping them
+# cp --only-keep-debug $EXECUTABLE mpc-qt.dbg
+# objcopy --strip-debug $EXECUTABLE
+# objcopy --add-gnu-debuglink=mpc-qt.dbg $EXECUTABLE
+# mv mpc-qt.dbg $DEBUGSYMBOLS/mpc-qt.dbg
+
   tests:
     name: Linux
     needs: build
