@@ -5,10 +5,16 @@ project(mpc-qt CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-add_compile_options(-Wall -Wextra -O2 -no-pie)
-add_link_options(-fno-pie)
+add_compile_options(-Wall -Wextra -O2 -DBOOST_STACKTRACE_USE_BACKTRACE)
+# set(BOOST_STACKTRACE_USE_BACKTRACE ON)
+# add_link_options(-fno-pie)
+# add_link_options(-lboost_stacktrace_backtrace -ldl -lbacktrace)
+add_link_options(-ldl -lbacktrace)
 
-set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Wall -Wextra -O2 -gstabs")
+# add_link_options()
+
+# set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Wall -Wextra -O2 -gstabs")
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # For clangd
 
