@@ -6,9 +6,13 @@ project(mpc-qt CXX)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_compile_options(-Wall -Wextra -O2)
-# set(BOOST_STACKTRACE_USE_BACKTRACE ON)
-# add_link_options(-fno-pie)
-# add_link_options(-lboost_stacktrace_backtrace -ldl -lbacktrace)
+
+# Choose stacktrace backend
+if(WIN32)
+    add_definitions(-DBOOST_STACKTRACE_USE_WINDBG)
+else()
+    add_definitions(-DBOOST_STACKTRACE_USE_ADDR2LINE)
+endif()
 
 # set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-Wall -Wextra -O2 -gstabs")
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
@@ -193,6 +197,8 @@ if(WIN32)
         platform/screensaver_win.cpp platform/screensaver_win.h
     )
     target_link_libraries(mpc-qt PRIVATE powrprof)
+    # Link with DbgHelp.dll on Windows for stacktrace
+    target_link_libraries(mpc-qt PRIVATE dbghelp)
 
     # Convert version string to comma-separated format for RC file
     string(REPLACE "." "," VERSTR_WIN_COMMA "${VERSTR_WIN}")
