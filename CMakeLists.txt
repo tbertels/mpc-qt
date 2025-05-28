@@ -198,7 +198,7 @@ if(WIN32)
     )
     target_link_libraries(mpc-qt PRIVATE powrprof)
     # Link with DbgHelp.dll on Windows for stacktrace
-    target_link_libraries(mpc-qt PRIVATE dbghelp)
+    target_link_libraries(mpc-qt PRIVATE dbgeng ole32)
 
     # Convert version string to comma-separated format for RC file
     string(REPLACE "." "," VERSTR_WIN_COMMA "${VERSTR_WIN}")
