@@ -30,6 +30,7 @@ ThumbnailerWindow::ThumbnailerWindow(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::ThumbnailerWindow)
 {
+    Logger::log("ThumbnailerWindow::ThumbnailerWindow");
     ui->setupUi(this);
     connect(ui->actionGo, &QPushButton::clicked,
             this, &ThumbnailerWindow::begin);
@@ -43,21 +44,25 @@ ThumbnailerWindow::ThumbnailerWindow(QWidget *parent) :
 
 ThumbnailerWindow::~ThumbnailerWindow()
 {
+    Logger::log("ThumbnailerWindow::~ThumbnailerWindow");
     delete ui;
 }
 
 void ThumbnailerWindow::setScreenshotDirectory(QString folder)
 {
+    Logger::log("ThumbnailerWindow::setScreenshotDirectory");
     screenshotDirectory = folder;
 }
 
 void ThumbnailerWindow::setScreenshotFormat(QString format)
 {
+    Logger::log("ThumbnailerWindow::setScreenshotFormat");
     screenshotFormat = format;
 }
 
 void ThumbnailerWindow::on_saveImageBrowse_clicked()
 {
+    Logger::log("ThumbnailerWindow::on_saveImageBrowse_clicked");
     static QFileDialog::Options options = QFileDialog::Options();
 #ifdef Q_OS_MAC
     options = QFileDialog::DontUseNativeDialog;
@@ -73,17 +78,20 @@ void ThumbnailerWindow::on_saveImageBrowse_clicked()
 
 void ThumbnailerWindow::thumbnailer_setProgress(int percent)
 {
+    Logger::log("ThumbnailerWindow::thumbnailer_setProgress");
     ui->actionProgress->setValue(percent);
 }
 
 void ThumbnailerWindow::thumbnailer_finished()
 {
+    Logger::log("ThumbnailerWindow::thumbnailer_finished");
     setEnabled(true);
     hide();
 }
 
 void ThumbnailerWindow::open(QUrl sourceUrl)
 {
+    Logger::log("ThumbnailerWindow::open");
     //QString displayText = sourceUrl.fileName();
     QString saveFile = Helpers::parseFormatEx(thumbFormat, sourceUrl, screenshotDirectory, screenshotFormat,
                                               Helpers::NothingDisabled, Helpers::SubtitlesDisabled,
@@ -97,6 +105,7 @@ void ThumbnailerWindow::open(QUrl sourceUrl)
 
 void ThumbnailerWindow::begin()
 {
+    Logger::log("ThumbnailerWindow::begin");
     setEnabled(false);
 
     MpvThumbnailer::Params p;
@@ -113,16 +122,18 @@ void ThumbnailerWindow::begin()
 MpvThumbnailer::MpvThumbnailer(QObject *parent)
     : QObject(parent)
 {
-
+    Logger::log("MpvThumbnailer::MpvThumbnailer");
 }
 
 MpvThumbnailer::~MpvThumbnailer()
 {
+    Logger::log("MpvThumbnailer::~MpvThumbnailer");
     deinitPlayer();
 }
 
 void MpvThumbnailer::execute(const MpvThumbnailer::Params &p)
 {
+    Logger::log("MpvThumbnailer::execute");
     if (thumbState != AvailableState) {
         Logger::log(logModule, "tried to start with an already started thumbnailer");
         return;
@@ -155,6 +166,7 @@ void MpvThumbnailer::execute(const MpvThumbnailer::Params &p)
 
 void MpvThumbnailer::initPlayer()
 {
+    Logger::log("MpvThumbnailer::initPlayer");
     mpv = new MpvObject(this, friendlyName);
     thumbnailer = new MpvThumbnailDrawer(mpv);
     mpv->setWidgetType(Helpers::CustomWidget, thumbnailer);
@@ -176,6 +188,7 @@ void MpvThumbnailer::initPlayer()
 
 void MpvThumbnailer::deinitPlayer()
 {
+    Logger::log("MpvThumbnailer::deinitPlayer");
     if (!mpv)
         return;
     mpv->setWidgetType(Helpers::NullWidget);
@@ -187,6 +200,7 @@ void MpvThumbnailer::deinitPlayer()
 
 void MpvThumbnailer::initThumbPts()
 {
+    Logger::log("MpvThumbnailer::initThumbPts");
     int total = p.rows * p.cols;
     int index = 1;
     int dx = (p.imageWidth - emptySpace)/p.cols;
@@ -207,6 +221,7 @@ void MpvThumbnailer::initThumbPts()
 
 void MpvThumbnailer::processThumb()
 {
+    Logger::log("MpvThumbnailer::processThumb");
     if (pendingPts.isEmpty()) {
         Logger::log(logModule, "tried to process a thumb but there's nothing here");
         return;
@@ -221,6 +236,7 @@ void MpvThumbnailer::processThumb()
 
 bool MpvThumbnailer::seekNextFrame()
 {
+    Logger::log("MpvThumbnailer::seekNextFrame");
     if (pendingPts.isEmpty())
         return false;
     LogStream(logModule) << "seeking to " << pendingPts.front().pts;
@@ -232,7 +248,7 @@ bool MpvThumbnailer::seekNextFrame()
 
 void MpvThumbnailer::renderImage()
 {
-    Logger::log(logModule, "rendering thumbnail image");
+    Logger::log("MpvThumbnailer::renderImage");
 
     QFont blurbFont("Helvetica", 12);
     QFontMetrics blurbMetrics(blurbFont);
@@ -289,6 +305,7 @@ void MpvThumbnailer::renderImage()
 
 void MpvThumbnailer::saveImage()
 {
+    Logger::log("MpvThumbnailer::saveImage");
     LogStream(logModule) << "saving thumbnails to " << p.imageFile;
     if (!render.save(p.imageFile, nullptr, p.jpegQuality))
         Logger::log(logModule, "file was not saved. Is the filename correct?");
@@ -297,11 +314,13 @@ void MpvThumbnailer::saveImage()
 
 void MpvThumbnailer::mpv_fileSizeChanged(int64_t bytes)
 {
+    Logger::log("MpvThumbnailer::mpv_fileSizeChanged");
     mpvFileSize = bytes;
 }
 
 void MpvThumbnailer::mpv_videoSizeChanged(QSize video)
 {
+    Logger::log("MpvThumbnailer::mpv_videoSizeChanged");
     mpvVideoSize = video;
     if (mpvVideoSize == QSize(-1,-1))
         return;
@@ -330,6 +349,7 @@ void MpvThumbnailer::mpv_videoSizeChanged(QSize video)
 
 void MpvThumbnailer::mpv_playLengthChanged(double length)
 {
+    Logger::log("MpvThumbnailer::mpv_playLengthChanged");
     mpvDuration = length;
     osdTimeFormat = length < 3600.0 ? Helpers::ShortHourFormat
                                     : Helpers::ShortFormat;
@@ -337,6 +357,7 @@ void MpvThumbnailer::mpv_playLengthChanged(double length)
 
 void MpvThumbnailer::mpv_playTimeChanged(double time)
 {
+    Logger::log("MpvThumbnailer::mpv_playTimeChanged");
     // This function is called:
     // * Once at file open with timestamp 0
     // * Once per seek navigation with the requested time (sometimes)
@@ -380,11 +401,13 @@ void MpvThumbnailer::mpv_playTimeChanged(double time)
 
 void MpvThumbnailer::mpv_playbackFinished()
 {
+    Logger::log("MpvThumbnailer::mpv_playbackFinished");
     thumbState = FinishedState;
 }
 
 void MpvThumbnailer::mpv_eofReachedChanged()
 {
+    Logger::log("MpvThumbnailer::mpv_eofReachedChanged");
     if (thumbState != FinishedState)
         return;
     deinitPlayer();
@@ -394,6 +417,7 @@ void MpvThumbnailer::mpv_eofReachedChanged()
 
 void MpvThumbnailer::timer_navigateTick()
 {
+    Logger::log("MpvThumbnailer::timer_navigateTick");
     processThumb();
     if (seekNextFrame())
         return;
@@ -408,11 +432,13 @@ void MpvThumbnailer::timer_navigateTick()
 MpvThumbnailDrawer::MpvThumbnailDrawer(MpvObject *object)
     : QOpenGLWidget(nullptr), MpvWidgetInterface(object)
 {
+    Logger::log("MpvThumbnailDrawer::MpvThumbnailDrawer");
     setWindowTitle(friendlyName);
 }
 
 MpvThumbnailDrawer::~MpvThumbnailDrawer()
 {
+    Logger::log("MpvThumbnailDrawer::~MpvThumbnailDrawer");
     makeCurrent();
     if (render) {
         ctrl->destroyRenderContext(render);
@@ -423,21 +449,25 @@ MpvThumbnailDrawer::~MpvThumbnailDrawer()
 
 void MpvThumbnailDrawer::setLogoUrl(const QString &filename)
 {
+    Logger::log("MpvThumbnailDrawer::setLogoUrl");
     Q_UNUSED(filename)
 }
 
 void MpvThumbnailDrawer::setLogoBackground(const QColor &color)
 {
+    Logger::log("MpvThumbnailDrawer::setLogoBackground");
     Q_UNUSED(color)
 }
 
 void MpvThumbnailDrawer::setDrawLogo(bool yes)
 {
+    Logger::log("MpvThumbnailDrawer::setDrawLogo");
     Q_UNUSED(yes)
 }
 
 void MpvThumbnailDrawer::initializeGL()
 {
+    Logger::log("MpvThumbnailDrawer::initializeGL");
 #if MPV_CLIENT_API_VERSION < MPV_MAKE_VERSION(2,0)
     mpv_opengl_init_params glInit { &MpvGlWidget::get_proc_address, this, nullptr };
 #else
@@ -454,6 +484,7 @@ void MpvThumbnailDrawer::initializeGL()
 
 void MpvThumbnailDrawer::paintGL()
 {
+    Logger::log("MpvThumbnailDrawer::paintGL");
     if (!render) {
         Logger::log(logModule, "tried to draw a frame, but no renderer set");
         return;
@@ -471,6 +502,7 @@ void MpvThumbnailDrawer::paintGL()
 
 void MpvThumbnailDrawer::resizeGL(int w, int h)
 {
+    Logger::log("MpvThumbnailDrawer::resizeGL");
     qreal r = devicePixelRatioF();
     glWidth = int(w * r);
     glHeight = int(h * r);
@@ -478,6 +510,7 @@ void MpvThumbnailDrawer::resizeGL(int w, int h)
 
 void MpvThumbnailDrawer::alwaysUpdate()
 {
+    Logger::log("MpvThumbnailDrawer::alwaysUpdate");
     makeCurrent();
     paintGL();
     context()->swapBuffers(context()->surface());
@@ -487,16 +520,18 @@ void MpvThumbnailDrawer::alwaysUpdate()
 
 void MpvThumbnailDrawer::render_update(void *ctx)
 {
+    Logger::log("MpvThumbnailDrawer::render_update");
     QMetaObject::invokeMethod(reinterpret_cast<MpvThumbnailDrawer*>(ctx), "alwaysUpdate");
 }
 
 void MpvThumbnailDrawer::initMpv()
 {
-
+    Logger::log("MpvThumbnailDrawer::initMpv");
 }
 
 QWidget *MpvThumbnailDrawer::self()
 {
+    Logger::log("MpvThumbnailDrawer::self");
     return this;
 }
 
