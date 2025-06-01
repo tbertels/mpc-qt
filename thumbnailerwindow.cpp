@@ -375,10 +375,6 @@ void MpvThumbnailer::mpv_playTimeChanged(double time)
     // frames to render (ha ha), or use some other potentionally more correct
     // option.  Perhaps core-idle?  Patches welcome.
     mpvTime = time;
-    if (time < 0) {
-        thumbState = AvailableState;
-        return;
-    }
 
     if (thumbState == StartedState) {
         if (mpvVideoSize == QSize(-1,-1)) {
