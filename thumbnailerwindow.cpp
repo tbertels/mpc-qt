@@ -359,6 +359,8 @@ void MpvThumbnailer::mpv_playLengthChanged(double length)
 void MpvThumbnailer::mpv_playTimeChanged(double time)
 {
     Logger::log("MpvThumbnailer::mpv_playTimeChanged");
+    LogStream(logModule) << "thumbState: " << thumbState;
+    LogStream(logModule) << "time: " << time;
     // This function is called:
     // * Once at file open with timestamp 0
     // * Once per seek navigation with the requested time (sometimes)
