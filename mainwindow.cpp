@@ -35,6 +35,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->verticalLine1->setParent(ui->controlbar);
+    ui->verticalLine1->setFrameStyle(QFrame::Raised);
     setupMenu();
     setupContextMenu();
     setupTrayIcon();
