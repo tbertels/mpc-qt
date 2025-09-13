@@ -164,6 +164,16 @@ set(TS_FILES
     translations/mpc-qt_zh_CN.ts
 )
 
+if(WIN32) # Include the Qt interface translations on Windows
+    file(GLOB QT_QM_FILES "${PROJECT_SOURCE_DIR}/translations/qt/qtbase_*.qm")
+
+    qt_add_resources(mpc-qt "qt_translations"
+        PREFIX "/i18n/"
+        BASE "${PROJECT_SOURCE_DIR}/translations/qt"
+        FILES ${QT_QM_FILES}
+    )
+endif()
+
 if(Qt6_VERSION VERSION_GREATER_EQUAL 6.7.0)
     # Starting with Qt 6.7, this can be used to exclude some files from lupdate
     set_property(TARGET mpc-qt PROPERTY QT_EXCLUDE_SOURCES_FROM_TRANSLATION
