@@ -37,11 +37,11 @@ void PropertiesWindow::setFileName(const QString &filename)
     ui->detailsFilename->setText(text);
     ui->clipFilename->setText(text);
 
-    QMimeDatabase db;
-    QMimeType mime = db.mimeTypeForFile(filename);
-    QIcon icon = QIcon::fromTheme(mime.iconName(), QIcon(":/images/icon.png"));
-    ui->detailsIcon->setPixmap(icon.pixmap(32, 32));
-    ui->clipIcon->setPixmap(icon.pixmap(32, 32));
+    // QMimeDatabase db;
+    // QMimeType mime = db.mimeTypeForFile(filename);
+    // QIcon icon = QIcon::fromTheme(mime.iconName(), QIcon(":/images/icon.png"));
+    // ui->detailsIcon->setPixmap(icon.pixmap(32, 32));
+    // ui->clipIcon->setPixmap(icon.pixmap(32, 32));
 
     generalData.clear();
     generalData.insert("filename", filename);
