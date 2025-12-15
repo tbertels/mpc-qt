@@ -5,6 +5,7 @@
 #include <QDialog>
 #include <QVariantList>
 #include <QVariantMap>
+#include <QShowEvent>
 
 namespace Ui {
 class PropertiesWindow;
@@ -38,14 +39,21 @@ private slots:
     void on_save_clicked();
     void updateSaveVisibility();
 
+protected:
+    void showEvent(QShowEvent *event) override;
+
 private:
     void updateLastTab();
     QString generalDataText();
     QString sectionText(const QString &header, const QVariantMap &fields);
+    void ensureUiInitialized();
+    void updateIconAsync();
 
     Ui::PropertiesWindow *ui;
+    bool uiInitialized = false;
 
     QString filename;
+    QString pendingFilename;
     QVariantMap generalData;
     QString trackText;
     QString chapterText;

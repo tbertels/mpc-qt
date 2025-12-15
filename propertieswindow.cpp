@@ -10,8 +10,30 @@
 
 PropertiesWindow::PropertiesWindow(QWidget *parent) :
     QDialog(parent),
-    ui(new Ui::PropertiesWindow)
+    ui(nullptr)
 {
+    setWindowTitle(tr("Properties"));
+    setWindowIcon(QIcon(":/images/icon/mpc-qt.svg"));
+}
+
+PropertiesWindow::~PropertiesWindow()
+{
+    delete ui;
+}
+
+void PropertiesWindow::showEvent(QShowEvent *event)
+{
+    QDialog::showEvent(event);
+    // Update icon when window is shown (deferred from setFileName)
+    updateIconAsync();
+}
+
+void PropertiesWindow::ensureUiInitialized()
+{
+    if (uiInitialized)
+        return;
+
+    ui = new Ui::PropertiesWindow;
     ui->setupUi(this);
     ui->tabWidget->setCurrentIndex(0);
     // if (Platform::isWindows) {
@@ -23,25 +45,21 @@ PropertiesWindow::PropertiesWindow(QWidget *parent) :
     updateSaveVisibility();
     connect(ui->tabWidget, &QTabWidget::currentChanged,
             this, &PropertiesWindow::updateSaveVisibility);
-}
-
-PropertiesWindow::~PropertiesWindow()
-{
-    delete ui;
+    uiInitialized = true;
 }
 
 void PropertiesWindow::setFileName(const QString &filename)
 {
+    ensureUiInitialized();
     this->filename = filename;
+    pendingFilename = filename;
     QString text = filename.isEmpty() ? QString("-") : filename;
     ui->detailsFilename->setText(text);
     ui->clipFilename->setText(text);
 
-    QMimeDatabase db;
-    QMimeType mime = db.mimeTypeForFile(filename);
-    QIcon icon = QIcon::fromTheme(mime.iconName(), QIcon(":/images/icon.png"));
-    ui->detailsIcon->setPixmap(icon.pixmap(32, 32));
-    ui->clipIcon->setPixmap(icon.pixmap(32, 32));
+    // QMimeDatabase is slow on Windows, only look it up when window is shown
+    if (isVisible())
+        updateIconAsync();
 
     generalData.clear();
     generalData.insert("filename", filename);
@@ -50,8 +68,20 @@ void PropertiesWindow::setFileName(const QString &filename)
     updateSaveVisibility();
 }
 
+void PropertiesWindow::updateIconAsync()
+{
+    if (pendingFilename.isEmpty())
+        return;
+    QMimeDatabase db;
+    QMimeType mime = db.mimeTypeForFile(pendingFilename);
+    QIcon icon = QIcon::fromTheme(mime.iconName(), QIcon(":/images/icon.png"));
+    ui->detailsIcon->setPixmap(icon.pixmap(32, 32));
+    ui->clipIcon->setPixmap(icon.pixmap(32, 32));
+}
+
 void PropertiesWindow::setFileFormat(const QString &format)
 {
+    ensureUiInitialized();
     ui->detailsType->setText(format.isEmpty() ? QString("-")
                                               : format);
     generalData.insert("format", format);
@@ -60,6 +90,7 @@ void PropertiesWindow::setFileFormat(const QString &format)
 
 void PropertiesWindow::setFileSize(const int64_t &bytes)
 {
+    ensureUiInitialized();
     ui->detailsSize->setText(Helpers::fileSizeToString(bytes));
     generalData.insert("size", qlonglong(bytes));
     updateLastTab();
@@ -67,6 +98,7 @@ void PropertiesWindow::setFileSize(const int64_t &bytes)
 
 void PropertiesWindow::setMediaLength(double time)
 {
+    ensureUiInitialized();
     ui->detailsLength->setText(time < 0 ? QString("-")
                                         : Helpers::toDateFormatFixed(time, Helpers::ShortFormat));
     generalData.insert("time", time);
@@ -74,12 +106,14 @@ void PropertiesWindow::setMediaLength(double time)
 
 void PropertiesWindow::setVideoSize(const QSize &sz)
 {
+    ensureUiInitialized();
     ui->detailsVideoSize->setText(!sz.isValid() ? QString("-")
                                             : QString("%1 x %2").arg(sz.width()).arg(sz.height()));
 }
 
 void PropertiesWindow::setFileModifiedTime(const QUrl &file)
 {
+    ensureUiInitialized();
     QLocale locale;
     auto lastModified = QFileInfo(file.toLocalFile()).lastModified();
     ui->detailsModified->setText(!file.isLocalFile() ? QString("-") :
@@ -88,16 +122,19 @@ void PropertiesWindow::setFileModifiedTime(const QUrl &file)
 
 void PropertiesWindow::setMediaTitle(const QString &title)
 {
+    ensureUiInitialized();
     ui->clipTitle->setText(title.isEmpty() ? QString("-") : title);
 }
 
 void PropertiesWindow::setFilePath(const QString &path)
 {
+    ensureUiInitialized();
     ui->clipLocation->setText(path.isEmpty() ? QString("-") : path);
 }
 
 void PropertiesWindow::setTracks(const QVariantList &tracks)
 {
+    ensureUiInitialized();
     QMap<QString,QString> typeToText({
         { "video", tr("Video") },
         { "audio", tr("Audio") },
@@ -170,6 +207,7 @@ void PropertiesWindow::setTracks(const QVariantList &tracks)
 
 void PropertiesWindow::setMetaData(QVariantMap data)
 {
+    ensureUiInitialized();
     QStringList items;
     if (data.contains("author"))    items << data["author"].toString();
     if (data.contains("artist"))    items << data["artist"].toString();
@@ -192,6 +230,7 @@ void PropertiesWindow::setMetaData(QVariantMap data)
 
 void PropertiesWindow::setChapters(const QVariantList &chapters)
 {
+    ensureUiInitialized();
     chapterText.clear();
     if (chapters.isEmpty())
         return;
@@ -215,12 +254,14 @@ void PropertiesWindow::setChapters(const QVariantList &chapters)
 
 void PropertiesWindow::updateSaveVisibility()
 {
+    if (!uiInitialized) return;
     ui->save->setVisible(ui->tabWidget->currentIndex()==2
                          && !filename.isEmpty());
 }
 
 void PropertiesWindow::updateLastTab()
 {
+    if (!uiInitialized) return;
     ui->mediaInfoText->clear();
     ui->mediaInfoText->insertPlainText(generalDataText() + trackText + chapterText);
 }
