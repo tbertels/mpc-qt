@@ -19,8 +19,8 @@ PropertiesWindow::PropertiesWindow(QWidget *parent) :
         monoFont.setFamily("Consolas");
         ui->mediaInfoText->setFont(monoFont);
     }
-    setMetaData(QVariantMap());
-    updateSaveVisibility();
+    // setMetaData(QVariantMap());
+    // updateSaveVisibility();
     connect(ui->tabWidget, &QTabWidget::currentChanged,
             this, &PropertiesWindow::updateSaveVisibility);
 }
