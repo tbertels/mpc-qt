@@ -70,6 +70,7 @@ MpvObject::PropertyDispatchMap MpvObject::propertyDispatch = {
 
 MpvObject::MpvObject(QObject *owner, const QString &clientName) : QObject(owner)
 {
+    Logger::log("mpvwidget", "MpvObject (" + clientName + ")");
     // Setup threads
     worker = new QThread();
     worker->start();
@@ -193,6 +194,7 @@ MpvObject::MpvObject(QObject *owner, const QString &clientName) : QObject(owner)
     QMetaObject::invokeMethod(ctrl, "setLogLevel",
                               Qt::QueuedConnection,
                               Q_ARG(QString, "info"));
+    Logger::log("mpvwidget", "MpvObject (" + clientName + ")" + " created");
 }
 
 MpvObject::~MpvObject()
