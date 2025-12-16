@@ -311,8 +311,8 @@ void Flow::init() {
     settingsWindow->setWindowModality(Qt::WindowModal);
     if (settingsDisableWindowManagement)
         settingsWindow->disableWindowManagment();
-    Logger::log("main", "creating properties window");
-    propertiesWindow = new PropertiesWindow();
+    // Logger::log("main", "creating properties window");
+    // propertiesWindow = new PropertiesWindow();
     Logger::log("main", "creating favorites window");
     favoritesWindow = new FavoritesWindow();
     Logger::log("main", "creating goto window");
@@ -577,8 +577,8 @@ void Flow::setupMainWindowConnections()
             mainWindow, &MainWindow::setFullscreenHidePanels);
 
     // propertieswindow -> mainwindow
-    connect(propertiesWindow, &PropertiesWindow::artistAndTitleChanged,
-            mainWindow, &MainWindow::setMediaTitleWithFilename);
+    // connect(propertiesWindow, &PropertiesWindow::artistAndTitleChanged,
+    //         mainWindow, &MainWindow::setMediaTitleWithFilename);
 
     // mainwindow -> playlistwindow
     connect(mainWindow, &MainWindow::playCurrentItemRequested,
@@ -641,8 +641,8 @@ void Flow::setupMainWindowConnections()
             mainWindow, &MainWindow::setFavoriteTracks);
 
     // mainwindow -> properties
-    connect(mainWindow, &MainWindow::showFileProperties,
-            propertiesWindow, &QWidget::show);
+    // connect(mainWindow, &MainWindow::showFileProperties,
+    //         propertiesWindow, &QWidget::show);
 
     // mainwindow -> log
     connect(mainWindow, &MainWindow::showLogWindow,
@@ -826,28 +826,28 @@ void Flow::setupMpvObjectConnections()
             settingsWindow, &SettingsWindow::setAudioDevices);
 
     // mpvwidget -> properties
-    connect(mpvObject, &MpvObject::fileNameChanged,
-            propertiesWindow, &PropertiesWindow::setFileName);
-    connect(mpvObject, &MpvObject::fileFormatChanged,
-            propertiesWindow, &PropertiesWindow::setFileFormat);
-    connect(mpvObject, &MpvObject::fileSizeChanged,
-            propertiesWindow, &PropertiesWindow::setFileSize);
-    connect(mpvObject, &MpvObject::playLengthChanged,
-            propertiesWindow, &PropertiesWindow::setMediaLength);
-    connect(mpvObject, &MpvObject::videoSizeChanged,
-            propertiesWindow, &PropertiesWindow::setVideoSize);
-    connect(playbackManager, &PlaybackManager::startingPlayingFile,
-            propertiesWindow, &PropertiesWindow::setFileModifiedTime);
-    connect(mpvObject, &MpvObject::tracksChanged,
-            propertiesWindow, &PropertiesWindow::setTracks);
-    connect(mpvObject, &MpvObject::mediaTitleChanged,
-            propertiesWindow, &PropertiesWindow::setMediaTitle);
-    connect(mpvObject, &MpvObject::filePathChanged,
-            propertiesWindow, &PropertiesWindow::setFilePath);
-    connect(mpvObject, &MpvObject::metaDataChanged,
-            propertiesWindow, &PropertiesWindow::setMetaData);
-    connect(mpvObject, &MpvObject::chaptersChanged,
-            propertiesWindow, &PropertiesWindow::setChapters);
+    // connect(mpvObject, &MpvObject::fileNameChanged,
+    //         propertiesWindow, &PropertiesWindow::setFileName);
+    // connect(mpvObject, &MpvObject::fileFormatChanged,
+    //         propertiesWindow, &PropertiesWindow::setFileFormat);
+    // connect(mpvObject, &MpvObject::fileSizeChanged,
+    //         propertiesWindow, &PropertiesWindow::setFileSize);
+    // connect(mpvObject, &MpvObject::playLengthChanged,
+    //         propertiesWindow, &PropertiesWindow::setMediaLength);
+    // connect(mpvObject, &MpvObject::videoSizeChanged,
+    //         propertiesWindow, &PropertiesWindow::setVideoSize);
+    // connect(playbackManager, &PlaybackManager::startingPlayingFile,
+    //         propertiesWindow, &PropertiesWindow::setFileModifiedTime);
+    // connect(mpvObject, &MpvObject::tracksChanged,
+    //         propertiesWindow, &PropertiesWindow::setTracks);
+    // connect(mpvObject, &MpvObject::mediaTitleChanged,
+    //         propertiesWindow, &PropertiesWindow::setMediaTitle);
+    // connect(mpvObject, &MpvObject::filePathChanged,
+    //         propertiesWindow, &PropertiesWindow::setFilePath);
+    // connect(mpvObject, &MpvObject::metaDataChanged,
+    //         propertiesWindow, &PropertiesWindow::setMetaData);
+    // connect(mpvObject, &MpvObject::chaptersChanged,
+    //         propertiesWindow, &PropertiesWindow::setChapters);
 
     // mpvwidget -> mainwindow
     connect(mpvObject, &MpvObject::audioTrackSet,
@@ -1308,7 +1308,7 @@ QVariantMap Flow::windowsToVMap_v2()
         windowManager.saveDocks(mainWindow->dockHost());
     if (rememberWindowGeometry) {
         windowManager.saveWindow(settingsWindow);
-        windowManager.saveWindow(propertiesWindow);
+        // windowManager.saveWindow(propertiesWindow);
         windowManager.saveWindow(logWindow);
         windowManager.saveWindow(libraryWindow);
     }
@@ -1323,7 +1323,7 @@ void Flow::restoreWindows_v2(const QVariantMap &geometryMap)
     windowManager.setJson(geometryMap);
     windowManager.restoreDocks(mainWindow->dockHost(), { mainWindow->playlistWindow() });
     windowManager.restoreWindow(settingsWindow);
-    windowManager.restoreWindow(propertiesWindow);
+    // windowManager.restoreWindow(propertiesWindow);
     windowManager.restoreWindow(logWindow);
     windowManager.restoreWindow(libraryWindow);
     windowManager.restoreAppWindow(mainWindow, cliInfo);
