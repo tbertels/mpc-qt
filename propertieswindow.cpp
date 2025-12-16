@@ -14,11 +14,11 @@ PropertiesWindow::PropertiesWindow(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->tabWidget->setCurrentIndex(0);
-    if (Platform::isWindows) {
-        QFont monoFont;
-        monoFont.setFamily("Consolas");
-        ui->mediaInfoText->setFont(monoFont);
-    }
+    // if (Platform::isWindows) {
+    //     QFont monoFont;
+    //     monoFont.setFamily("Consolas");
+    //     ui->mediaInfoText->setFont(monoFont);
+    // }
     // setMetaData(QVariantMap());
     // updateSaveVisibility();
     connect(ui->tabWidget, &QTabWidget::currentChanged,
