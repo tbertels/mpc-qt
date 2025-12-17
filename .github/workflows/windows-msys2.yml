@@ -44,11 +44,14 @@ jobs:
         fileName: "yt-dlp.exe"
     - name: Set version
       run: echo "FORCE_VERSION=$( cat .github/actions/data/VERSION )" >> $GITHUB_ENV
-    - name: Build
+    - name: Make icon
       run: |
         chmod +x *.sh
         set +e
         bash make-win-icon.sh
+        ls -lR
+    - name: Build
+      run: |
         bash make-release-msys2.sh
     - name: Upload
       uses: actions/upload-artifact@v4
