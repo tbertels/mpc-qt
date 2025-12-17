@@ -419,7 +419,7 @@
     "tweaksTimeShort": true,
     "tweaksTimeTooltip": false,
     "tweaksTimeTooltipLocation": 0,
-    "tweaksVideoPreview": false,
+    "tweaksVideoPreview": true,
     "tweaksVolumeLimit": true,
     "videoAlphaMode": 0,
     "videoDumbMode": false,
