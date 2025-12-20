@@ -42,6 +42,7 @@
   VIAddVersionKey /LANG=0 "LegalCopyright" "(C) 2015 The MPC-QT developers"
   VIAddVersionKey /LANG=0 "FileDescription" "Installer"
   VIAddVersionKey /LANG=0 "FileVersion" "@VERSTR_WIN@"
+  VIAddVersionKey /LANG=0 "ProductVersion" "@VERSTR_WIN@"
   VIProductVersion "@VERSTR_WIN@"
 
 ;--------------------------------
