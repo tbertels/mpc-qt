@@ -20,6 +20,23 @@ namespace Ui {
 class MainWindow;
 }
 
+// Worker class for running espeak-ng in a separate thread
+class EspeakWorker : public QObject {
+    Q_OBJECT
+
+public:
+    EspeakWorker(const QString &text) : textToSpeak(text) {}
+
+public slots:
+    void run();
+
+signals:
+    void finished();
+
+private:
+    QString textToSpeak;
+};
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
