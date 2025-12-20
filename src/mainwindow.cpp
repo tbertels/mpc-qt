@@ -24,8 +24,22 @@
 #include <QStyle>
 #include <QSvgRenderer>
 #include <QPainter>
+#include <QProcess>
+#include <QThread>
 
 using namespace Helpers;
+
+void EspeakWorker::run()
+{
+    if (!textToSpeak.isEmpty()) {
+        QProcess process;
+        process.start("espeak-ng", QStringList() << "\"" + textToSpeak + "\"");
+        process.waitForFinished();
+        QString result = process.readAllStandardOutput();
+    }
+    emit finished();
+}
+
 static constexpr char logModule[] =  "mainwindow";
 static constexpr char SKIPACTION[] = "Skip";
 static constexpr char textWindowTitle[] = "Media Player Classic Qute Theater";
@@ -2546,6 +2560,18 @@ void MainWindow::subtitleTrackSet(int64_t id)
 void MainWindow::setSubtitleText(QString subText)
 {
     subtitleText = subText;
+    if (!subText.isEmpty()) {
+        QThread *thread = new QThread(this);
+        EspeakWorker *worker = new EspeakWorker(subText);
+        worker->moveToThread(thread);
+
+        connect(thread, &QThread::started, worker, &EspeakWorker::run);
+        connect(worker, &EspeakWorker::finished, thread, &QThread::quit);
+        connect(worker, &EspeakWorker::finished, worker, &QObject::deleteLater);
+        connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+
+        thread->start();
+    }
 }
 
 void MainWindow::setVolume(int level, bool onInit)
