@@ -30,6 +30,7 @@ static StdFileCopy realStdErr(stderr);
 void loggerCallback(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     Q_UNUSED(context)
+    assert(msg != "QFSFileEngine::open: No file name specified");
     switch (type) {
     case QtDebugMsg:
         Logger::log("qt", "debug", msg);

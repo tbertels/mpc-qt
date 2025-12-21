@@ -24,7 +24,7 @@ DEST="mpc-qt-$SUFFIX"
 mkdir -p translations/qt
 cp /mingw64/share/qt6/translations/qtbase_*.qm translations/qt
 
-cmake -DMPCQT_VERSION=$VERSION -DENABLE_LOCAL_MPV=ON -G Ninja -B build
+cmake -DMPCQT_VERSION=$VERSION -DCMAKE_BUILD_TYPE=Debug -DENABLE_LOCAL_MPV=ON -G Ninja -B build
 ninja -C build
 
 if [ ! -f "$EXECUTABLE" ]; then
