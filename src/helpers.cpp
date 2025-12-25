@@ -703,6 +703,9 @@ QScreen *Helpers::findScreenByName(QString s)
 
 QString Helpers::screenToVisualName(const QScreen *s)
 {
+    QString makeAndModel;
+    if (!s->manufacturer().isEmpty() && !s->model().isEmpty())
+        makeAndModel = QString(" (%1 %2)").arg(s->manufacturer(), s->model());
     // If someone has a way to convert QScreen to unique device ids on Windows,
     // please enlighten me.  It would be nice to select a monitor and not lose
     // it when its geometry changes.
@@ -712,9 +715,9 @@ QString Helpers::screenToVisualName(const QScreen *s)
         QString h = QString::number(r.height());
         QString x = QString("%1%2").arg(r.left() >= 0 ? "+" : "-", QString::number(std::abs(r.left())));
         QString y = QString("%1%2").arg(r.top() >= 0 ? "+" : "-", QString::number(std::abs(r.top())));
-        return QString("%1 %2x%3%4%5").arg(s->name(), w, h, x, y);
+        return QString("%1 %2x%3%4%5%6").arg(s->name(), w, h, x, y, makeAndModel);
     }
-    return s->name();
+    return s->name() + makeAndModel;
 }
 
 
