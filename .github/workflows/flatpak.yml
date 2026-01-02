@@ -40,11 +40,13 @@ jobs:
             yq eval -i '
               .modules[0].modules = load("flathub/io.github.mpc_qt.mpc-qt.yml").modules[0].modules
             ' packaging/flatpak/io.github.mpc_qt.mpc-qt.yml
+      - name: mv
+        run: mv -f packaging/flatpak/io.github.mpc_qt.mpc-qt.yml flathub/io.github.mpc_qt.mpc-qt.yml
       - name: Build
         uses: flatpak/flatpak-github-actions/flatpak-builder@master
         with:
           bundle: mpc-qt-${{env.MPC-QT_PACKAGE_VERSION}}-linux-x86_64.flatpak
-          manifest-path: packaging/flatpak/io.github.mpc_qt.mpc-qt.yml
+          manifest-path: flathub/io.github.mpc_qt.mpc-qt.yml
           cache-key: flatpak-builder-${{ github.sha }}
           upload-artifact: false
       - name: Upload
