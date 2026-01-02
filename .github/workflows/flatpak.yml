@@ -12,19 +12,12 @@ jobs:
       options: --privileged
     steps:
       - name: Check out repository
-        uses: sithlord48/fancy-checkout@v1.0.0
-      - name: pwd
-        run: pwd
-      - name: ls
-        run: ls -lR
-      - uses: actions/checkout@v4
+        uses: actions/checkout@v4
+      - name: Check out Flathub repository
+        uses: actions/checkout@v4
         with:
           repository: 'flathub/io.github.mpc_qt.mpc-qt'
           path: flathub
-      - name: pwd
-        run: pwd
-      - name: ls
-        run: ls -lR
       - name: Get version
         run: |
           if [[ "$GITHUB_REF" == *"refs/heads/release/"* ]]; then
@@ -32,16 +25,15 @@ jobs:
           else
             echo "MPC-QT_PACKAGE_VERSION=continuous">> $GITHUB_ENV
           fi
-      # - name: Prepare Flatpak manifest with modules from Flathub manifest
-      #   uses: mikefarah/yq@v4.50.1
-      #   with:
-      #     # wget https://raw.githubusercontent.com/flathub/io.github.mpc_qt.mpc-qt/refs/heads/master/io.github.mpc_qt.mpc-qt.yml
-      #     cmd: |
-      #       yq eval -i '
-      #         .modules[0].modules = load("flathub/io.github.mpc_qt.mpc-qt.yml").modules[0].modules
-      #       ' packaging/flatpak/io.github.mpc_qt.mpc-qt.yml
-      # - name: mv
-      #   run: mv -f packaging/flatpak/io.github.mpc_qt.mpc-qt.yml flathub/io.github.mpc_qt.mpc-qt.yml
+      - name: Prepare Flatpak manifest with modules from Flathub manifest
+        uses: mikefarah/yq@v4.50.1
+        with:
+          cmd: |
+            yq eval -i '
+              .modules[0].modules = load("flathub/io.github.mpc_qt.mpc-qt.yml").modules[0].modules
+            ' packaging/flatpak/io.github.mpc_qt.mpc-qt.yml
+      - name: mv
+        run: mv -f packaging/flatpak/io.github.mpc_qt.mpc-qt.yml flathub/io.github.mpc_qt.mpc-qt.yml
       - name: Build
         uses: flatpak/flatpak-github-actions/flatpak-builder@master
         with:
