@@ -132,9 +132,9 @@ jobs:
         export LDAI_OUTPUT="mpc-qt-linux-x64-${{env.MPC-QT_PACKAGE_VERSION}}.AppImage"
         export LDAI_UPDATE_INFORMATION="gh-releases-zsync|mpc-qt|mpc-qt|latest|mpc-qt-linux-x64-*.AppImage.zsync"
         linuxdeploy/linuxdeploy-x86_64.AppImage \
-          --appdir AppDir \
-          -e AppDir/usr/bin/mpc-qt \
-          -d AppDir/usr/share/applications/io.github.mpc_qt.mpc-qt.desktop \
+          --appdir build/AppDir \
+          -e build/AppDir/usr/bin/mpc-qt \
+          -d build/AppDir/usr/share/applications/io.github.mpc_qt.mpc-qt.desktop \
           --custom-apprun ./packaging/appimage/AppRun \
           --plugin qt --output appimage
     - name: Get version
