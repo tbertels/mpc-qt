@@ -75,6 +75,20 @@ jobs:
         ./update
         cp debian/changelog.TEMPLATE debian/changelog
         mk-build-deps -s sudo -i
+    - name: ls
+      run: ls -lR
+    # - name: Generate hash of dependencies
+    #   id: deps-hash
+    #   run: |
+    #     HASH=$()
+    #     echo "hash=$HASH" >> $GITHUB_OUTPUT
+    # - name: Cache or restore dependencies
+    # - uses: actions/cache@v4
+    #   with:
+    #     path: mpv-build
+    #     key: ${{ runner.os }}-appimage-${{ steps.deps-hash.outputs.hash }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-appimage-
     - name: Build mpv package
       run: |
         cd mpv-build
