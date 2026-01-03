@@ -109,13 +109,14 @@ jobs:
         version: 1-alpha-20251107-1
     - name: Build AppImage
       run: |
-        export EXTRA_QT_PLUGINS="svg;"
+        export EXTRA_QT_MODULES="svg;"
         export QMAKE=/usr/bin/qmake6
         export LDAI_OUTPUT="mpc-qt-linux-x64-${{env.MPC-QT_PACKAGE_VERSION}}.AppImage"
         export LDAI_UPDATE_INFORMATION="gh-releases-zsync|mpc-qt|mpc-qt|latest|mpc-qt-linux-x64-*.AppImage.zsync"
         linuxdeploy/linuxdeploy-x86_64.AppImage \
           --appdir AppDir \
-          -e bin/mpc-qt \
+          -e usr/bin/mpc-qt \
+          -d usr/share/applications/io.github.mpc_qt.mpc-qt.desktop
           --custom-apprun ./packaging/appimage/AppRun \
           --plugin qt --output appimage
     - name: Get version
