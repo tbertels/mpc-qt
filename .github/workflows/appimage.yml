@@ -82,7 +82,7 @@ jobs:
       id: cache-deps
       uses: actions/cache@v4
       with:
-        path: mpv-build
+        path: mpv-build/*.deb
         key: appimage-${{ env.RUNNEROS }}-${{ hashFiles(
                                             'mpv-build/ffmpeg/RELEASE',
                                             'mpv-build/libass/RELEASEVERSION',
@@ -98,8 +98,8 @@ jobs:
         dpkg-buildpackage -uc -us -b
     - name: Install mpv package
       run: |
-        mv mpv-build/*.deb ./
-        sudo dpkg -i *.deb
+        # mv mpv-build/*.deb ./
+        sudo dpkg -i mpv-build/*.deb
     - name: Configure build
       run: |
         VERSION=$( cat .github/actions/data/VERSION )
