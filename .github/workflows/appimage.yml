@@ -107,6 +107,8 @@ jobs:
         plugins: qt@1-alpha-20250213-1
         set-env: true
         version: 1-alpha-20251107-1
+    - name: ls
+      run: ls -lR
     - name: Build AppImage
       run: |
         export EXTRA_QT_MODULES="svg;"
@@ -115,8 +117,8 @@ jobs:
         export LDAI_UPDATE_INFORMATION="gh-releases-zsync|mpc-qt|mpc-qt|latest|mpc-qt-linux-x64-*.AppImage.zsync"
         linuxdeploy/linuxdeploy-x86_64.AppImage \
           --appdir AppDir \
-          -e usr/bin/mpc-qt \
-          -d usr/share/applications/io.github.mpc_qt.mpc-qt.desktop
+          -e bin/mpc-qt \
+          -d share/applications/io.github.mpc_qt.mpc-qt.desktop \
           --custom-apprun ./packaging/appimage/AppRun \
           --plugin qt --output appimage
     - name: Get version
