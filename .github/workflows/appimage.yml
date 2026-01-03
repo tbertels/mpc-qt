@@ -72,6 +72,7 @@ jobs:
         ./use-libplacebo-release
         ./use-mpv-release
         sed -i '/libdisplay-info-dev/d' debian/control
+        sed -i 's/git clone/git clone --depth 10000/g' update
         ./update
         cp debian/changelog.TEMPLATE debian/changelog
     - name: ls
