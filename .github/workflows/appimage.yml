@@ -105,12 +105,12 @@ jobs:
       run: |
         VERSION=$( cat .github/actions/data/VERSION )
         if [[ $VERSION != $DEVBUILD ]]; then
-          cmake -DMPCQT_VERSION=$VERSION -G Ninja -B build
+          cmake -DMPCQT_VERSION=$VERSION -DCMAKE_INSTALL_PREFIX=/usr -G Ninja -B build
         else
-          cmake -G Ninja -B build
+          cmake -DCMAKE_INSTALL_PREFIX=/usr -G Ninja -B build
         fi
     - name: Build
-      run: cmake -DCMAKE_INSTALL_PREFIX=/usr --build build
+      run: cmake --build build
     - name: ninja install
       run: DESTDIR=AppDir ninja -C build install
     - name: Install packages
