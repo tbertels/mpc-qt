@@ -54,7 +54,7 @@ jobs:
     - name: Install packages
       run: |
         for i in 1 2 3; do
-          sudo apt install linguist-qt6 qt6-tools-dev qmake6 qt6-base-dev libboost-all-dev libqt6svg6-dev && break || sleep 60
+          sudo apt install linguist-qt6 qt6-tools-dev qmake6 qt6-base-dev qtwayland libboost-all-dev libqt6svg6-dev && break || sleep 60
         done
         for i in 1 2 3; do
           sudo apt install devscripts equivs git libunwind-dev gdebi && break || sleep 60
@@ -146,9 +146,15 @@ jobs:
         plugins: qt@1-alpha-20250213-1
         set-env: true
         version: 1-alpha-20251107-1
+    # - name: Check variables and files
+    #   run: |
+    #     echo $QT_INSTALL_PLUGINS
+    #     ls -lR $QT_INSTALL_PLUGINS/platforms
+    #     ls -lR /usr/lib/x86_64-linux-gnu/qt6/plugins/platforms/
     - name: Build AppImage
       run: |
         export EXTRA_QT_MODULES="svg;"
+        export EXTRA_PLATFORM_PLUGINS="libqwayland-egl.so;libqwayland-generic.so"
         export QMAKE=/usr/bin/qmake6
         export LDAI_OUTPUT="mpc-qt-linux-x64-${{env.MPC-QT_PACKAGE_VERSION}}.AppImage"
         export LDAI_UPDATE_INFORMATION="gh-releases-zsync|mpc-qt|mpc-qt|latest|mpc-qt-linux-x64-*.AppImage.zsync"
