@@ -139,7 +139,8 @@ MpvObject::MpvObject(QObject *owner, const QString &clientName) : QObject(owner)
         { "load-scripts", true },
         { "scripts", scripts },
         { "clipboard-backends", "clr" },
-        { "gpu-context", "dxinterop" } // only set this on win
+        { "gpu-context", "d3d11" }, // only set this on win
+        { "d3d11-exclusive-fs", "yes" } // only set this on win
     };
     QMetaObject::invokeMethod(ctrl, "create", Qt::BlockingQueuedConnection,
                               Q_ARG(MpvController::OptionList, earlyOptions));
