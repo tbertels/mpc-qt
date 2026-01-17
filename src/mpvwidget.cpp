@@ -138,7 +138,8 @@ MpvObject::MpvObject(QObject *owner, const QString &clientName) : QObject(owner)
         { "audio-client-name", clientName },
         { "load-scripts", true },
         { "scripts", scripts },
-        { "clipboard-backends", "clr" }
+        { "clipboard-backends", "clr" },
+        { "gpu-context", "angle" } // only set this on win
     };
     QMetaObject::invokeMethod(ctrl, "create", Qt::BlockingQueuedConnection,
                               Q_ARG(MpvController::OptionList, earlyOptions));
