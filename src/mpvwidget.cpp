@@ -139,7 +139,8 @@ MpvObject::MpvObject(QObject *owner, const QString &clientName) : QObject(owner)
         { "load-scripts", true },
         { "scripts", scripts },
         { "clipboard-backends", "clr" },
-        { "gpu-context", "angle" } // only set this on win
+        { "gpu-context", "angle" }, // only set this on win
+        { "angle-renderer", "d3d9" } // only set this on win
     };
     QMetaObject::invokeMethod(ctrl, "create", Qt::BlockingQueuedConnection,
                               Q_ARG(MpvController::OptionList, earlyOptions));
