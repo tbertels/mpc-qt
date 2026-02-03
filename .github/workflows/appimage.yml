@@ -29,9 +29,6 @@ jobs:
           sudo add-apt-repository ppa:savoury1/build-tools && break || sleep 60
         done
         for i in 1 2 3; do
-          sudo add-apt-repository ppa:savoury1/qt-6-2 && break || sleep 60
-        done
-        for i in 1 2 3; do
           sudo add-apt-repository ppa:savoury1/llvm-defaults-13 && break || sleep 60
         done
         for i in 1 2 3; do
@@ -57,16 +54,16 @@ jobs:
     - name: Install packages
       run: |
         for i in 1 2 3; do
-          sudo apt install linguist-qt6 qt6-tools-dev qmake6 qt6-base-dev libboost-all-dev libqt6svg6-dev && break || sleep 60
+          sudo apt install libboost-all-dev && break || sleep 60
         done
         for i in 1 2 3; do
           sudo apt install devscripts equivs git libunwind-dev gdebi && break || sleep 60
         done
         for i in 1 2 3; do
-          sudo apt install libwayland-dev libwayland-egl-backend-dev || sleep 60
+          sudo apt install libwayland-dev libwayland-egl-backend-dev && break || sleep 60
         done
         for i in 1 2 3; do
-          sudo apt install libfuse2 libqt6svg6-dev libqt6openglwidgets6 || sleep 60
+          sudo apt install libfuse2 && break || sleep 60
         done
     - name: Install newer Qt version
       uses: jurplel/install-qt-action@v4
