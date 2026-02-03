@@ -14,15 +14,9 @@ env:
 
 jobs:
   appimage:
-    name: Build with PPA
+    name: Build
     runs-on: ubuntu-22.04
     steps:
-    - name: Update repositories
-      run: |
-        sudo apt update
-    - name: Install packages
-      run: |
-        sudo apt install build-essential cmake
     - name: Add repositories
       run: |
         for i in 1 2 3; do
@@ -43,6 +37,11 @@ jobs:
         for i in 1 2 3; do
           sudo add-apt-repository ppa:kubuntu-ppa/backports-extra && break || sleep 60
         done
+    - name: Update repositories
+      run: |
+        for i in 1 2 3; do
+          sudo apt update && break || sleep 60
+        done
     - name: Update packages
       run: |
         for i in 1 2 3; do
@@ -53,6 +52,9 @@ jobs:
         done
     - name: Install packages
       run: |
+        for i in 1 2 3; do
+          sudo apt install build-essential cmake && break || sleep 60
+        done
         for i in 1 2 3; do
           sudo apt install libboost-all-dev && break || sleep 60
         done
