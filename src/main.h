@@ -67,6 +67,7 @@ private:
     QVariantMap favoritesToVMap() const;
     QVariantMap windowsToVMap_v2();
     void restoreWindows_v2(const QVariantMap &geometryMap);
+    void checkScreensaverAbilities();
 
 private slots:
     void self_windowsRestored();

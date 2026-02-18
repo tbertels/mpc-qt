@@ -338,15 +338,11 @@ void Flow::init() {
 
     Logger::log(logModule, "finished creating servers");
 
-    // Initialize the screensaver
+    Logger::log(logModule, "initializing the screensaver");
     inhibitScreensaver = false;
     screenSaver = Platform::screenSaver();
-    QSet<ScreenSaver::Ability> actualPowers = screenSaver->abilities();
-    mainWindow->setScreensaverAbilities(actualPowers);
-    QSet<ScreenSaver::Ability> desiredPowers;
-    desiredPowers << ScreenSaver::Inhibit << ScreenSaver::Uninhibit;
-    manipulateScreensaver = actualPowers.contains(desiredPowers);
-    settingsWindow->setScreensaverDisablingEnabled(manipulateScreensaver);
+    QTimer::singleShot(0, this, &Flow::checkScreensaverAbilities);
+    Logger::log(logModule, "initializing the screensaver done");
 
     // Initialize the device manager if present
     if (Platform::deviceManager()->deviceAccessPossible()) {
@@ -1484,6 +1480,18 @@ void Flow::mainwindow_optionsOpenRequested()
     settingsWindow->takeKeyMap(keyMap);
     settingsWindow->show();
     settingsWindow->raise();
+}
+
+void Flow::checkScreensaverAbilities()
+{
+    Logger::log(logModule, "checking screensaver abilities");
+    QSet<ScreenSaver::Ability> actualPowers = screenSaver->abilities();
+    mainWindow->setScreensaverAbilities(actualPowers);
+    QSet<ScreenSaver::Ability> desiredPowers;
+    desiredPowers << ScreenSaver::Inhibit << ScreenSaver::Uninhibit;
+    manipulateScreensaver = actualPowers.contains(desiredPowers);
+    settingsWindow->setScreensaverDisablingEnabled(manipulateScreensaver);
+    Logger::log(logModule, "checking screensaver abilities done");
 }
 
 void Flow::manager_stateChanged(PlaybackManager::PlaybackState state)
