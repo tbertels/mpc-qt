@@ -1,6 +1,5 @@
 #!/bin/bash
-echo $(pwd)
-ls -lR
+echo $(magick --version)
 ICOFILE="../build/mpc-qt.ico"
 mkdir ../build
 if [ ! -f $ICOFILE ]; then
