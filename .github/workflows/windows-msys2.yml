@@ -53,7 +53,7 @@ jobs:
     - name: Build
       run: |
         chmod +x scripts/*.sh
-        set +e
+        set -e
         bash scripts/make-win-icon.sh
         bash scripts/make-release-msys2.sh
     - name: Upload
