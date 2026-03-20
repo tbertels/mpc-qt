@@ -1,4 +1,5 @@
 #!/bin/bash
+echo $(pwd)
 ICOFILE="../build/mpc-qt.ico"
 mkdir ../build
 if [ ! -f $ICOFILE ]; then
