@@ -72,13 +72,13 @@ double DrawnSlider::minimum()
 void DrawnSlider::setHighContrast(bool enabled)
 {
     highContrast = enabled;
-    redrawHandle = true;
+    redrawPics = true;
     update();
 }
 
 void DrawnSlider::applicationPaletteChanged()
 {
-    redrawHandle = true;
+    redrawPics = true;
     update();
 }
 
@@ -153,10 +153,10 @@ void DrawnSlider::paintEvent(QPaintEvent *event)
         }
     }
 
-    makeBackground();
-    if (redrawHandle) {
+    if (redrawPics) {
+        makeBackground();
         makeHandle();
-        redrawHandle = false;
+        redrawPics = false;
     }
 
     QPainter p(this);
@@ -258,7 +258,7 @@ height  |         +          ----    hH
     grooveArea.adjust(marginX, marginY, -marginX, -marginY);
     sliderArea = grooveArea;
     sliderArea.adjust(0, 0, -(handleWidth&1), 0);
-    redrawHandle = true;
+    redrawPics = true;
 }
 
 void DrawnSlider::mousePressEvent(QMouseEvent *ev)
@@ -303,7 +303,7 @@ void MediaSlider::clearTicks()
     ticks.clear();
     vLoopA = vLoopB = -1;
     loopArea = { -1, -1, 0, 0 };
-    redrawHandle = true;
+    redrawPics = true;
 }
 
 void MediaSlider::setTick(double value, QString text)
