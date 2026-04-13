@@ -989,13 +989,15 @@ static void* GLAPIENTRY glMPGetNativeDisplay(const char* name)
 MpvGlWidget::MpvGlWidget(MpvObject *object, QWidget *parent) :
     QOpenGLWidget(parent), MpvWidgetInterface(object)
 {
+    setAttribute(Qt::WA_OpaquePaintEvent, true);
+    setContextMenuPolicy(Qt::CustomContextMenu);
+
     connect(this, &QOpenGLWidget::frameSwapped,
             this, &MpvGlWidget::self_frameSwapped);
     connect(mpvObject, &MpvObject::playbackStarted,
             this, &MpvGlWidget::self_playbackStarted);
     connect(mpvObject, &MpvObject::playbackFinished,
             this, &MpvGlWidget::self_playbackFinished);
-    setContextMenuPolicy(Qt::CustomContextMenu);
 }
 
 MpvGlWidget::~MpvGlWidget()
