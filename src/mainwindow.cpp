@@ -616,6 +616,8 @@ void MainWindow::setFullscreenMode(bool fullscreenMode)
         positionSlider_->update();
         volumeSlider_->update();
         statusTime->update();
+        mpvHost_->update();
+        mpvw->update();
     });
     emit fullscreenModeChanged(fullscreenMode_);
 }
