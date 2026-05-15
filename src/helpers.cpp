@@ -295,12 +295,14 @@ QString Helpers::toDateFormatFixed(double time, Helpers::TimeFormat format)
     int fr = t % 1000;
     switch (format) {
     case LongFormat:
-        return QString(prefix + "%1:%2:%3.%4").arg(QString::number(hr))
+        return QString(prefix + "%1:%2:%3.%4")
+                .arg(QString::number(hr))
                 .arg(QString::number(mn),2,'0')
                 .arg(QString::number(se),2,'0')
                 .arg(QString::number(fr),3,'0');
     case ShortFormat:
-        return QString(prefix + "%1:%2:%3").arg(QString::number(hr),2,'0')
+        return QString(prefix + "%1:%2:%3")
+                .arg(QString::number(hr))
                 .arg(QString::number(mn),2,'0')
                 .arg(QString::number(se),2,'0');
     case LongHourFormat:
