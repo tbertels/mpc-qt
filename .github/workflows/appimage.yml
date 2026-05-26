@@ -5,7 +5,7 @@ on:
 
 env:
   DEVBUILD: continuous
-  RUNNEROS: ubuntu-22.04
+  RUNNEROS: ubuntu-24.04
   CACHE_KEY_FILES: |
     mpv-build/ffmpeg/RELEASE
     mpv-build/libass/RELEASEVERSION
