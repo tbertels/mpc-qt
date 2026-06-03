@@ -284,6 +284,7 @@ exit 0
 
 :reg
 	:: Wrap the reg command to check for errors
+	set "error=no"
 	>nul reg %*
 	if errorlevel 1 set error=yes
 	if [%error%] == [yes] echo Error in command: reg %*
@@ -291,13 +292,12 @@ exit 0
 	goto :EOF
 
 :reg_set_opt
-	:: Set a value in the registry if it doesn't already exist
+	:: Set a value in the registry, replacing it if necessary.
 	set key=%~1
 	set value=%~2
 	set data=%~3
 
-	reg query "%key%" /v "%value%" >nul 2>&1
-	if errorlevel 1 call :reg add "%key%" /v "%value%" /d "%data%"
+	call :reg add "%key%" /v "%value%" /d "%data%" /f
 	goto :EOF
 
 :add_verbs
