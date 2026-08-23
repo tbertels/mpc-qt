@@ -1460,8 +1460,10 @@ void MainWindow::showAlwaysOnTopWindow(bool show)
         return;
     if (!alwaysOnTopWindow)
         createAlwaysOnTopWindow();
-    if (alwaysOnTopWindow)
+    if (alwaysOnTopWindow) {
+        alwaysOnTopWindow->setScreen(screen());
         alwaysOnTopWindow->setVisible(show);
+    }
 }
 
 QIcon MainWindow::createIconFromSvg(const QString &svgPath, int maxSize) const
