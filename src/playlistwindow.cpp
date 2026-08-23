@@ -767,7 +767,7 @@ void PlaylistWindow::savePlaylist(const QUuid &playlistUuid)
     options = QFileDialog::DontUseNativeDialog;
 #endif
     QString file;
-    file = QFileDialog::getSaveFileName(this, tr("Export Playlist File"), QString(),
+    file = QFileDialog::getSaveFileName(this, tr("Export Playlist File"), tr("Playlist") + ".m3u",
                                         tr("Playlist files (*.m3u *.m3u8)"), nullptr, options);
     auto pl = PlaylistCollection::getSingleton()->getPlaylist(playlistUuid);
     if (!file.isEmpty() && pl)
