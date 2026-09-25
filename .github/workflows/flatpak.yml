@@ -14,7 +14,7 @@ jobs:
       image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.10
       options: --privileged
     env:
-      SRC_REPO: "https://github.com{{ github.event.pull_request.head.repo.full_name || github.repository }}.git"
+      SRC_REPO: "https://github.com/${{ github.event.pull_request.head.repo.full_name || github.repository }}.git"
       SRC_BRANCH: ${{ github.head_ref || github.ref_name }}
 
     steps:
