@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - name: Install packages
-      uses: msys2/setup-msys2@v2
+      uses: msys2/setup-msys2@v2.33.0
       with:
         msystem: ucrt64
         update: true
@@ -38,7 +38,10 @@ jobs:
           mingw-w64-ucrt-x86_64-nsis
           mingw-w64-ucrt-x86_64-vulkan-loader
     - name: Avoid line ending issues on Windows
-      run: git config --global core.autocrlf input
+      run: |
+        uname
+        echo $MSYSTEM
+        git config --global core.autocrlf input
     - name: Download mpc-qt source
       uses: actions/checkout@v6.0.2
     - name: Download yt-dlp
