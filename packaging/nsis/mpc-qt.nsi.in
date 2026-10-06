@@ -6,10 +6,12 @@
 ;Smaller installer (83 MB vs 110 MB) but much slower installation
 ;SetCompressor /SOLID lzma
 
+!addplugindir "D:\a\_temp\msys64\ucrt64\share\nsis\Plugins\unicode"
+
 ;--------------------------------
 ;Include Modern UI
   !include LogicLib.nsh
-  !include MUI.nsh
+  !include MUI2.nsh
 
   Var INSTALLED_SIZE
 
