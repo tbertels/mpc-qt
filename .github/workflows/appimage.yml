@@ -5,7 +5,7 @@ on:
 
 env:
   DEVBUILD: continuous
-  RUNNEROS: ubuntu-22.04
+  RUNNEROS: ubuntu-24.04
   CACHE_KEY_FILES: |
     mpv-build/ffmpeg/RELEASE
     mpv-build/libass/RELEASEVERSION
@@ -15,7 +15,7 @@ env:
 jobs:
   appimage:
     name: Build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Add repositories
       run: |
