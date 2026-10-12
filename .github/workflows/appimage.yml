@@ -17,26 +17,6 @@ jobs:
     name: Build
     runs-on: ubuntu-24.04
     steps:
-    - name: Add repositories
-      run: |
-        for i in 1 2 3; do
-          sudo add-apt-repository ppa:savoury1/build-tools && break || sleep 60
-        done
-        for i in 1 2 3; do
-          sudo add-apt-repository ppa:savoury1/llvm-defaults-13 && break || sleep 60
-        done
-        for i in 1 2 3; do
-          sudo add-apt-repository ppa:savoury1/graphics && break || sleep 60
-        done
-        for i in 1 2 3; do
-          sudo add-apt-repository ppa:savoury1/display && break || sleep 60
-        done
-        for i in 1 2 3; do
-          sudo add-apt-repository ppa:savoury1/multimedia && break || sleep 60
-        done
-        for i in 1 2 3; do
-          sudo add-apt-repository ppa:kubuntu-ppa/backports-extra && break || sleep 60
-        done
     - name: Update repositories
       run: |
         for i in 1 2 3; do
