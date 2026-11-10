@@ -5,7 +5,7 @@
 
 ;Smaller installer (83 MB vs 110 MB) but much slower installation
 ;SetCompressor /SOLID lzma
-SetCompressor /SOLID zlib
+SetCompressor /SOLID bzip2
 
 ;--------------------------------
 ;Include Modern UI
