@@ -2271,7 +2271,7 @@ void MainWindow::setPlaybackState(PlaybackManager::PlaybackState state, bool isP
                 state != PlaybackManager::ErrorState;
     isPaused = isPlaybackPaused;
     setUiEnabledState(state != PlaybackManager::StoppedState);
-    ui->actionPlayPause->setText(isPaused ? tr("&Pause") : tr("&Play"));
+    ui->actionPlayPause->setText(isPaused ? tr("&Play") : tr("&Pause"));
 
     if (state == PlaybackManager::WaitingState) {
         mpvObject_->setLoopPoints(-1, -1);
