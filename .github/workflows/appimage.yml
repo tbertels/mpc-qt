@@ -24,6 +24,7 @@ jobs:
             mpv \
             pipewire-audio \
             pipewire-jack \
+            sndio \
             qt6-svg \
             qt6-tools \
             udisks2 \
