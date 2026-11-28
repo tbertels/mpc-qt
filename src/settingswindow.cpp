@@ -762,6 +762,14 @@ void SettingsWindow::sendSignals()
     bool useDarkColors = WIDGET_LOOKUP(ui->interfaceWidgetDark).toBool();
     // REMOVEME: Apply a dark palette manually because Qt doesn't propagate it
     bool darkColorScheme = false;
+    LogStream() << "style name: " << QApplication::style()->name();
+    QString colorScheme = QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark ? "Dark" :
+                          QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Light ? "Light" :
+                          "Unknown";
+    LogStream() << "colorScheme: " << colorScheme;
+    bool darkPalette = palette().color(QPalette::WindowText).lightness() >
+                       palette().color(QPalette::Window).lightness();
+    LogStream() << "darkPalette: " << darkPalette;
 #if QT_VERSION >= QT_VERSION_CHECK(6,5,0)
     darkColorScheme = QGuiApplication::styleHints()->colorScheme() == Qt::ColorScheme::Dark;
 #endif
